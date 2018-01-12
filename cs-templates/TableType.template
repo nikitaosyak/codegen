@@ -1,0 +1,14 @@
+public struct {{name}} {
+
+{{#fields}}
+    public {{type}} {{name}}{{#default}} = {{value}}{{/default}};
+{{/fields}}
+
+{{#constructors}}
+    public {{../name}}({{#parameters}}{{name}}:{{type}}{{/parameters}}) {
+    {{#definedFields}}
+        {{name}} = {{value}}
+    {{/definedFields}}
+    }
+{{/constructors}}
+}

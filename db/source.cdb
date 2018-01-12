@@ -1,0 +1,511 @@
+{
+	"sheets": [
+		{
+			"name": "race_type",
+			"columns": [
+				{
+					"typeStr": "1",
+					"name": "name",
+					"display": null
+				},
+				{
+					"typeStr": "5:BIPED,QUADRIPED,OCTOPED,ZEROPED",
+					"name": "limbs",
+					"opt": true
+				},
+				{
+					"typeStr": "11",
+					"name": "skin",
+					"opt": true
+				}
+			],
+			"lines": [
+				{
+					"name": "Human",
+					"skin": 7666110,
+					"limbs": 0
+				},
+				{
+					"name": "Pickle",
+					"limbs": 3,
+					"skin": 11074452
+				},
+				{
+					"name": "Octopus",
+					"limbs": 2,
+					"skin": 9385643
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "statistic",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "id",
+					"display": null
+				},
+				{
+					"typeStr": "9:Category",
+					"name": "category"
+				},
+				{
+					"typeStr": "8",
+					"name": "children",
+					"display": null
+				},
+				{
+					"typeStr": "9:TemplateType",
+					"name": "type",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"id": "race",
+					"children": [
+						{
+							"state children": "limbs"
+						}
+					],
+					"type": [
+						4,
+						"races"
+					],
+					"category": [
+						0
+					]
+				},
+				{
+					"id": "vigor",
+					"children": [
+						{
+							"state children": "health"
+						}
+					],
+					"type": [
+						3,
+						0,
+						100
+					],
+					"category": [
+						0
+					]
+				},
+				{
+					"id": "honesty",
+					"children": [
+						{
+							"state children": "smalltalk"
+						}
+					],
+					"type": [
+						3,
+						0,
+						100
+					],
+					"category": [
+						1
+					]
+				},
+				{
+					"id": "sex",
+					"children": [],
+					"category": [
+						0
+					],
+					"type": [
+						0,
+						"man",
+						"noMan"
+					]
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "statistic@children",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "6:state",
+					"name": "state children"
+				}
+			]
+		},
+		{
+			"name": "state",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "id",
+					"display": null
+				},
+				{
+					"typeStr": "9:Category",
+					"name": "category"
+				},
+				{
+					"typeStr": "8",
+					"name": "children",
+					"opt": true
+				},
+				{
+					"typeStr": "9:TemplateType",
+					"name": "type",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"id": "limbs",
+					"category": [
+						0
+					],
+					"type": [
+						2,
+						0,
+						8
+					]
+				},
+				{
+					"id": "health",
+					"category": [
+						0
+					],
+					"type": [
+						3,
+						0,
+						10
+					]
+				},
+				{
+					"id": "smalltalk",
+					"category": [
+						1
+					],
+					"type": [
+						3,
+						0,
+						10
+					],
+					"children": [
+						{
+							"activity children": "talk"
+						}
+					]
+				},
+				{
+					"id": "faith",
+					"category": [
+						1
+					],
+					"type": [
+						3,
+						0,
+						10
+					],
+					"children": [
+						{
+							"activity children": "pray"
+						}
+					]
+				},
+				{
+					"id": "questing",
+					"category": [
+						1
+					],
+					"type": [
+						3,
+						0,
+						10
+					],
+					"children": [
+						{
+							"activity children": "quest"
+						}
+					]
+				}
+			],
+			"separators": [
+				0,
+				2
+			],
+			"props": {
+				"separatorTitles": [
+					"required states",
+					"optional states"
+				]
+			}
+		},
+		{
+			"name": "activity",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "id",
+					"display": null
+				},
+				{
+					"typeStr": "9:Category",
+					"name": "category",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"id": "talk",
+					"category": [
+						1
+					]
+				},
+				{
+					"id": "pray",
+					"category": [
+						1
+					]
+				},
+				{
+					"id": "quest",
+					"category": [
+						1
+					]
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "state@children",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "6:activity",
+					"name": "activity children",
+					"display": null
+				}
+			]
+		},
+		{
+			"name": "modifiers",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "id",
+					"display": null
+				},
+				{
+					"typeStr": "9:Category",
+					"name": "category",
+					"display": null
+				},
+				{
+					"typeStr": "8",
+					"name": "stat subjects",
+					"opt": true
+				},
+				{
+					"typeStr": "8",
+					"name": "state subjects",
+					"opt": true,
+					"display": null
+				},
+				{
+					"typeStr": "8",
+					"name": "activity subjects",
+					"opt": true
+				}
+			],
+			"lines": [
+				{
+					"id": "sexSwap",
+					"category": [
+						0
+					],
+					"stat subjects": [
+						{
+							"subjects": "sex"
+						}
+					]
+				},
+				{
+					"id": "sewnMouth",
+					"category": [
+						0
+					],
+					"activity subjects": [
+						{
+							"subjects": "talk"
+						},
+						{
+							"subjects": "pray"
+						}
+					]
+				},
+				{
+					"id": "tornLimb",
+					"category": [
+						0
+					],
+					"state subjects": [
+						{
+							"subjects": "limbs"
+						}
+					]
+				},
+				{
+					"id": "glorySeeker",
+					"category": [
+						1
+					],
+					"state subjects": [
+						{
+							"subjects": "questing"
+						}
+					]
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "modifiers@stat subjects",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "6:statistic",
+					"name": "subjects",
+					"display": null
+				}
+			]
+		},
+		{
+			"name": "modifiers@state subjects",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "6:state",
+					"name": "subjects",
+					"display": null
+				}
+			]
+		},
+		{
+			"name": "modifiers@activity subjects",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "6:activity",
+					"name": "subjects",
+					"display": null
+				}
+			]
+		}
+	],
+	"customTypes": [
+		{
+			"name": "TemplateType",
+			"cases": [
+				{
+					"name": "BinaryEnum",
+					"args": [
+						{
+							"name": "v1",
+							"typeStr": "1"
+						},
+						{
+							"name": "v2",
+							"typeStr": "1"
+						}
+					]
+				},
+				{
+					"name": "Logical",
+					"args": [
+						{
+							"name": "v",
+							"typeStr": "2"
+						}
+					]
+				},
+				{
+					"name": "IntRange",
+					"args": [
+						{
+							"name": "min",
+							"typeStr": "3"
+						},
+						{
+							"name": "max",
+							"typeStr": "3"
+						}
+					]
+				},
+				{
+					"name": "Range",
+					"args": [
+						{
+							"name": "min",
+							"typeStr": "4"
+						},
+						{
+							"name": "max",
+							"typeStr": "4"
+						}
+					]
+				},
+				{
+					"name": "Reference",
+					"args": [
+						{
+							"name": "v",
+							"typeStr": "1"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"cases": [
+				{
+					"name": "PHYSICAL",
+					"args": []
+				},
+				{
+					"name": "SOCIAL",
+					"args": []
+				},
+				{
+					"name": "ANOTHER",
+					"args": []
+				}
+			]
+		}
+	],
+	"compress": false
+}

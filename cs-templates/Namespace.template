@@ -1,0 +1,11 @@
+{{#using}}
+using {{type}};
+
+{{/using}}
+namespace {{name}} {
+
+{{#content}}
+{{item}}
+
+{{/content}}
+}
