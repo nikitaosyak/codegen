@@ -6,22 +6,21 @@ const fs = require('fs')
 const templates = {
     enum: fs.readFileSync('cs-templates/Enum.template', 'utf8'),
     ns: fs.readFileSync('cs-templates/Namespace.template', 'utf8'),
-    tt: fs.readFileSync('cs-templates/TableType.template', 'utf8')
+    tt: fs.readFileSync('cs-templates/TableType.template', 'utf8'),
+    activity: fs.readFileSync('cs-templates/Activity.template', 'utf8')
 }
 const db = JSON.parse(fs.readFileSync('db/source.cdb'))
 
 const handlebars = require('handlebars')
 const nsTemplate = handlebars.compile(templates.ns, {noEscape: true})
 
-//
 // ensuring output directory
-if (!fs.existsSync('./build')) {
-    fs.mkdirSync('./build')
-}
+if (!fs.existsSync('./build')) fs.mkdirSync('./build')
 
 //
 // helper functions
 const enumsLookup = {}
+const activityLookup = {}
 
 const capitalize = (v) => v.charAt(0).toUpperCase() + v.slice(1)
 const typeToInt = (v) => Number.parseInt(v.match(/^\d+/))
@@ -45,9 +44,9 @@ const processEnum = (name, members) => {
     })
 }
 
-const writeContent = (className, content, using = undefined) => {
-    const filePath = './build/' + className + '.cs'
-    const nsData = {name: 'gen', content: content, using: using}
+const writeContent = (className, content, using = undefined, ns = undefined, subPath = '') => {
+    const filePath = util.format('./build/%s%s.cs', subPath, className)
+    const nsData = {name: ns ? ns : 'gen', content: content, using: using}
     fs.writeFileSync(filePath, nsTemplate(nsData))
 }
 
@@ -168,6 +167,23 @@ tableTypes.forEach(tableType => {
     content.push({item: handlebars.compile(templates.tt, {noEscape: true})(templateData)})
     writeContent(capitalize(typeName), content, using)
     // console.log(templateData)
+})
+
+//
+// build activities
+const activities = db.sheets.filter(sh => sh.name === "activity")[0]
+
+if (!fs.existsSync('./build/activity')) fs.mkdirSync('./build/activity')
+
+activities.lines.forEach(line => {
+    const templateData = {
+        name: capitalize(line.id),
+        categoryType: 'Category',
+        categoryValue: enumsLookup['Category'][line.category[0]]
+    }
+
+    writeContent(capitalize(line.id), {item: handlebars.compile(templates.activity, {noEscape: true})(templateData)}, 
+        undefined, 'gen.activity', 'activity/')
 })
 
 // console.log(enumsLookup)

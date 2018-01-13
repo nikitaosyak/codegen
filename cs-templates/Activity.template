@@ -1,0 +1,3 @@
+public struct {{name}} {
+	public static {{categoryType}} category = {{categoryValue}};
+}
