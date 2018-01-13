@@ -1,14 +1,16 @@
 public struct {{name}} {
 
-{{#fields}}
-    public {{type}} {{name}}{{#default}} = {{value}}{{/default}};
-{{/fields}}
+{{#each fields}}
+    public {{type}} {{name}};
+{{/each}}
+
+    private {{name}}({{#each fields}}{{name}}:{{type}}{{#unless @last}}, {{/unless}}{{/each}}) {
+    {{#fields}}
+        this.{{name}} = {{name}};
+    {{/fields}}
+    }
 
 {{#constructors}}
-    public {{../name}}({{#parameters}}{{name}}:{{type}}{{/parameters}}) {
-    {{#definedFields}}
-        {{name}} = {{value}}
-    {{/definedFields}}
-    }
+    public static {{name}} = new {{../name}}({{#each values}}{{this}}{{#unless @last}}, {{/unless}}{{/each}});
 {{/constructors}}
 }

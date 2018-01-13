@@ -22,7 +22,7 @@
 			"lines": [
 				{
 					"name": "Human",
-					"skin": 7666110,
+					"skin": 15776078,
 					"limbs": 0
 				},
 				{
@@ -501,7 +501,7 @@
 					"args": []
 				},
 				{
-					"name": "ANOTHER",
+					"name": "LINGUISTIC",
 					"args": []
 				}
 			]

@@ -1,3 +1,4 @@
+const util = require('util')
 
 //
 // reading templates and database
@@ -10,7 +11,7 @@ const templates = {
 const db = JSON.parse(fs.readFileSync('db/source.cdb'))
 
 const handlebars = require('handlebars')
-const nsTemplate = handlebars.compile(templates.ns)
+const nsTemplate = handlebars.compile(templates.ns, {noEscape: true})
 
 //
 // ensuring output directory
@@ -22,15 +23,20 @@ if (!fs.existsSync('./build')) {
 // helper functions
 const enumsLookup = {}
 
-const capitalize = (str) => {
-    return str.charAt(0).toUpperCase() + str.slice(1)
+const capitalize = (v) => v.charAt(0).toUpperCase() + v.slice(1)
+const typeToInt = (v) => Number.parseInt(v.match(/^\d+/))
+const longToRgbStr = (v) => {
+    const r = (v >> 16) & 0xff
+    const g = (v >> 8) & 0xff
+    const b = v & 0xff
+    return [r, g, b].join(', ')
 }
 
 const processEnum = (name, members) => {
     const capName = capitalize(name)
     enumsLookup[capName] = members
 
-    return handlebars.compile(templates.enum)({
+    return handlebars.compile(templates.enum, {noEscape: true})({
         name: capName,
         fields: members.map((m, i) => {
             if (i === m.length) return {name: m}
@@ -72,7 +78,7 @@ tableTypes.forEach(tableType => {
     const typeName = tableType.name.replace('_type', '')
     let content = []
     let using = []
-    let constructorParametrization = []
+    let definingField = -1
 
     const templateData = {
         name: capitalize(typeName),
@@ -88,7 +94,7 @@ tableTypes.forEach(tableType => {
     })
 
     tableType.columns.forEach((column, i) => {
-        const columnType = Number.parseInt(column.typeStr.match(/^\d+/))
+        const columnType = typeToInt(column.typeStr)
         switch (columnType) {
             case 0: break
             case 1:
@@ -119,24 +125,49 @@ tableTypes.forEach(tableType => {
                 }
                 break
         }
-        if (!column.opt) constructorParametrization.push(i)
+        if (!column.opt) {
+            if (definingField > -1)
+                throw 'Cannot have more then one defining fields in type ' + capitalize(typeName)
+            definingField = i
+        }
     })
 
+    const resolveValueByColumnType = (column, lineKey, lineValue) => {
+        const columnType = typeToInt(column.typeStr)
+        switch (columnType) {
+            case 0: break
+            case 1:
+                return util.format('"%s"', lineValue)
+            case 2: break
+            case 3: break
+            case 4: break
+            case 5:
+                const enumName = capitalize(lineKey)
+                const enumElement = enumsLookup[enumName][lineValue]
+                return util.format('%s.%s', enumName, enumElement)
+            case 6: break
+            case 7: break
+            case 8: break
+            case 9: break
+            case 10: break
+            case 11:
+                return util.format('new Color(%s)', longToRgbStr(lineValue))
+        }
+    }
 
     tableType.lines.forEach((line, i) => {
-        templateData.constructors.push({
-            parameters: constructorParametrization.length > 0 ? [] : null,
-            definedFields: []
+        const values = []
+        tableType.columns.forEach(column => {
+            values.push(resolveValueByColumnType(column, column.name, line[column.name]))
         })
-        constructorParametrization.forEach(paramIdx => {
-            templateData.constructors[i].parameters.push({
-                name: tableType.columns[paramIdx].name
-            })
+        templateData.constructors.push({
+            name: line.name.toUpperCase(),
+            values: values
         })
     })
-    content.push({item: handlebars.compile(templates.tt)(templateData)})
+    content.push({item: handlebars.compile(templates.tt, {noEscape: true})(templateData)})
     writeContent(capitalize(typeName), content, using)
-    console.log(templateData)
+    // console.log(templateData)
 })
 
 // console.log(enumsLookup)
