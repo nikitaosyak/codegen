@@ -8,7 +8,7 @@ gulp.task('clean', () => {
 gulp.task('generate', ['clean'], () => {
     const nodemon = require('nodemon')
     const ndStream = nodemon({
-        script: 'app.js',
+        script: 'src/app.js',
         cmd: './',
         ext: 'js, template, cdb',
         env: {NODE_ENV: 'DEVELOPMENT'}
