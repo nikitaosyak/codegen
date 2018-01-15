@@ -1,23 +1,19 @@
 const gulp = require('gulp')
 
-gulp.task('clean', () => {
-    const clean = require('gulp-clean')
-    return gulp.src('build/', {read: false}).pipe(clean())
-})
-
-gulp.task('generate', ['clean'], () => {
-    const nodemon = require('nodemon')
-    const ndStream = nodemon({
+gulp.task('clean', () =>
+    gulp.src('build/', {read: false}).pipe(require('gulp-clean')())
+)
+gulp.task('build', ['clean'], () => {
+    require('nodemon')({
         script: 'src/app.js',
-        cmd: './',
-        ext: 'js, template, cdb',
-        env: {NODE_ENV: 'DEVELOPMENT'}
+        env: { 'NODE_ENV': 'development' }
+    }).on('start', () => {
+        gulp.start('watch')
     })
-
-    ndStream.on('crash', () => {
-        console.error('app crashed.. restarting soon\n')
-        ndStream.emit('restart', 2)
-    }).on('restart', () => {console.log('restarting')})
 })
 
-gulp.task('default', ['clean', 'generate'])
+gulp.task('watch', () => {
+    gulp.watch(['src/**/*.js'], ['clean'])
+})
+
+gulp.task('default', ['build'])
