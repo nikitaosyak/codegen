@@ -1,7 +1,6 @@
 const $ = require('./data')
 const utils = require('./utils')
 
-
 //
 // actually building
 //
@@ -82,33 +81,10 @@ tableTypes.forEach(tableType => {
         }
     })
 
-    const resolveValueByColumnType = (column, lineKey, lineValue) => {
-        const columnType = utils.typeToInt(column.typeStr)
-        switch (columnType) {
-            case 0: break
-            case 1:
-                return `"${lineValue}"`
-            case 2: break
-            case 3: break
-            case 4: break
-            case 5:
-                const enumName = utils.capitalize(lineKey)
-                const enumElement = $.lookup.enums[enumName][lineValue]
-                return `${enumName}.${enumElement}`
-            case 6: break
-            case 7: break
-            case 8: break
-            case 9: break
-            case 10: break
-            case 11:
-                return `new Color(${utils.longToRgbStr(lineValue)})`
-        }
-    }
-
-    tableType.lines.forEach((line, i) => {
+    tableType.lines.forEach(line => {
         const values = []
         tableType.columns.forEach(column => {
-            values.push(resolveValueByColumnType(column, column.name, line[column.name]))
+            values.push(utils.lineValueByColumnType(column, column.name, line[column.name]))
         })
         templateData.constructors.push({
             name: line.name.toUpperCase(),
@@ -123,17 +99,15 @@ tableTypes.forEach(tableType => {
 //
 // build activities
 const activities = $.db.sheets.filter(sh => sh.name === "activity")[0]
-
 utils.makeSureDirExists('./build/activity')
-
 activities.lines.forEach(line => {
-    const templateData = {
-        name: utils.capitalize(line.id),
-        categoryType: 'Category',
-        categoryValue: $.lookup.enums['Category'][line.category[0]]
-    }
+    const templateData = {}
+    utils.templateAssignName(templateData, line)
+    utils.templateAssignCategory(templateData, line, activities.columns)
 
-    utils.writeContent(utils.capitalize(line.id), {item: $.template.activity(templateData)},
+    utils.writeContent(
+        templateData.name,
+        {item: $.template.activity(templateData)},
         [], 'activity/', 'gen.activity')
 })
 
