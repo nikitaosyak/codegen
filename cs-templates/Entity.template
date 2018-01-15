@@ -1,0 +1,8 @@
+public struct {{name}} : {{entityType}} {
+	public static Category CATEGORY = {{category}};
+    public Category category { get { return {{name}}.CATEGORY; } }
+
+    {{#children}}
+    public static List<>
+    {{/children}}
+}

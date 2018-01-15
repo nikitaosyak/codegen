@@ -84,6 +84,11 @@ const self = {
         Object.assign(template, result)
     },
 
+    templateAssignImplementation: (template, implementation) => {
+        const result = {entityType: implementation}
+        Object.assign(template, result)
+    },
+
     templateAssignCategory: (template, line, columns) => {
         const result = {
             category: self.lineValueByColumnType(

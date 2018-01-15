@@ -67,7 +67,7 @@
 					"id": "race",
 					"children": [
 						{
-							"state children": "limbs"
+							"state": "limbs"
 						}
 					],
 					"type": [
@@ -82,7 +82,7 @@
 					"id": "vigor",
 					"children": [
 						{
-							"state children": "health"
+							"state": "health"
 						}
 					],
 					"type": [
@@ -98,7 +98,7 @@
 					"id": "honesty",
 					"children": [
 						{
-							"state children": "smalltalk"
+							"state": "smalltalk"
 						}
 					],
 					"type": [
@@ -136,7 +136,7 @@
 			"columns": [
 				{
 					"typeStr": "6:state",
-					"name": "state children"
+					"name": "state"
 				}
 			]
 		},
@@ -173,7 +173,8 @@
 						2,
 						0,
 						8
-					]
+					],
+					"children": []
 				},
 				{
 					"id": "health",
@@ -198,7 +199,7 @@
 					],
 					"children": [
 						{
-							"activity children": "talk"
+							"activity": "talk"
 						}
 					]
 				},
@@ -214,7 +215,7 @@
 					],
 					"children": [
 						{
-							"activity children": "pray"
+							"activity": "pray"
 						}
 					]
 				},
@@ -230,7 +231,7 @@
 					],
 					"children": [
 						{
-							"activity children": "quest"
+							"activity": "quest"
 						}
 					]
 				}
@@ -293,13 +294,12 @@
 			"columns": [
 				{
 					"typeStr": "6:activity",
-					"name": "activity children",
-					"display": null
+					"name": "activity"
 				}
 			]
 		},
 		{
-			"name": "modifiers",
+			"name": "modifier",
 			"columns": [
 				{
 					"typeStr": "0",
@@ -313,18 +313,7 @@
 				},
 				{
 					"typeStr": "8",
-					"name": "stat subjects",
-					"opt": true
-				},
-				{
-					"typeStr": "8",
-					"name": "state subjects",
-					"opt": true,
-					"display": null
-				},
-				{
-					"typeStr": "8",
-					"name": "activity subjects",
+					"name": "children",
 					"opt": true
 				}
 			],
@@ -334,9 +323,9 @@
 					"category": [
 						0
 					],
-					"stat subjects": [
+					"children": [
 						{
-							"subjects": "sex"
+							"statistic": "sex"
 						}
 					]
 				},
@@ -345,12 +334,12 @@
 					"category": [
 						0
 					],
-					"activity subjects": [
+					"children": [
 						{
-							"subjects": "talk"
+							"activity": "talk"
 						},
 						{
-							"subjects": "pray"
+							"activity": "pray"
 						}
 					]
 				},
@@ -359,9 +348,9 @@
 					"category": [
 						0
 					],
-					"state subjects": [
+					"children": [
 						{
-							"subjects": "limbs"
+							"state": "limbs"
 						}
 					]
 				},
@@ -370,9 +359,9 @@
 					"category": [
 						1
 					],
-					"state subjects": [
+					"children": [
 						{
-							"subjects": "questing"
+							"state": "questing"
 						}
 					]
 				}
@@ -381,7 +370,7 @@
 			"props": {}
 		},
 		{
-			"name": "modifiers@stat subjects",
+			"name": "modifier@children",
 			"props": {
 				"hide": true
 			},
@@ -390,38 +379,18 @@
 			"columns": [
 				{
 					"typeStr": "6:statistic",
-					"name": "subjects",
-					"display": null
-				}
-			]
-		},
-		{
-			"name": "modifiers@state subjects",
-			"props": {
-				"hide": true
-			},
-			"separators": [],
-			"lines": [],
-			"columns": [
+					"name": "statistic",
+					"opt": true
+				},
 				{
 					"typeStr": "6:state",
-					"name": "subjects",
-					"display": null
-				}
-			]
-		},
-		{
-			"name": "modifiers@activity subjects",
-			"props": {
-				"hide": true
-			},
-			"separators": [],
-			"lines": [],
-			"columns": [
+					"name": "state",
+					"opt": true
+				},
 				{
 					"typeStr": "6:activity",
-					"name": "subjects",
-					"display": null
+					"name": "activity",
+					"opt": true
 				}
 			]
 		}

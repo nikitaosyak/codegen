@@ -97,19 +97,40 @@ tableTypes.forEach(tableType => {
 })
 
 //
-// build activities
-const activities = $.db.sheets.filter(sh => sh.name === "activity")[0]
-utils.makeSureDirExists('./build/activity')
-activities.lines.forEach(line => {
-    const templateData = {}
-    utils.templateAssignName(templateData, line)
-    utils.templateAssignCategory(templateData, line, activities.columns)
+// build base entities
 
-    utils.writeContent(
-        templateData.name,
-        {item: $.template.activity(templateData)},
-        [], 'activity/', 'gen.activity')
+const entityTables = $.db.sheets.filter(sh => {
+    if (/^.+_type$/.test(sh.name)) return undefined
+    if (/^.+@.+$/.test(sh.name)) return undefined
+    return sh
 })
 
+entityTables.forEach(entityTable => {
+    utils.makeSureDirExists(`./build/${entityTable.name}`)
+
+    //
+    // create interface for entity class
+    const entityName = utils.capitalize(entityTable.name)
+    const entityInferface = `I${entityName}`
+    const directory = `${entityTable.name}/`
+    const namespace = `gen.${entityTable.name}`
+
+    utils.writeContent(entityInferface, {item: $.template.iEntity({name: entityName})},
+        [], directory, namespace)
+
+    //
+    // actually create each entity by line definitions
+    entityTable.lines.forEach(line => {
+        const templateData = {}
+        utils.templateAssignName(templateData, line)
+        utils.templateAssignImplementation(templateData, entityInferface)
+        utils.templateAssignCategory(templateData, line, entityTable.columns)
+
+        utils.writeContent(
+            templateData.name,
+            {item: $.template.entity(templateData)},
+            [], directory, namespace)
+    })
+})
 
 console.log($.lookup.enums)

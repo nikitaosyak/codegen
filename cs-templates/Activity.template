@@ -1,3 +1,0 @@
-public struct {{name}} {
-	public static Category category = {{category}};
-}
