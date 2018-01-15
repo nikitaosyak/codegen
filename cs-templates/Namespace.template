@@ -1,7 +1,6 @@
-{{#using}}
-using {{type}};
-
-{{/using}}
+{{#each using}}
+using {{this}};
+{{/each}}
 namespace {{name}} {
 
 {{#content}}

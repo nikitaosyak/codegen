@@ -1,75 +1,28 @@
-//
-// reading templates and database
-const fs = require('fs')
-const templates = {
-    enum: fs.readFileSync('cs-templates/Enum.template', 'utf8'),
-    ns: fs.readFileSync('cs-templates/Namespace.template', 'utf8'),
-    tt: fs.readFileSync('cs-templates/TableType.template', 'utf8'),
-    activity: fs.readFileSync('cs-templates/Activity.template', 'utf8')
-}
-const db = JSON.parse(fs.readFileSync('db/source.cdb'))
-
-const handlebars = require('handlebars')
-const nsTemplate = handlebars.compile(templates.ns, {noEscape: true})
-
-// ensuring output directory
-if (!fs.existsSync('./build')) fs.mkdirSync('./build')
-
-//
-// helper functions
-const enumsLookup = {}
-const activityLookup = {}
-
-const capitalize = (v) => v.charAt(0).toUpperCase() + v.slice(1)
-const typeToInt = (v) => Number.parseInt(v.match(/^\d+/))
-const longToRgbStr = (v) => {
-    const r = (v >> 16) & 0xff
-    const g = (v >> 8) & 0xff
-    const b = v & 0xff
-    return [r, g, b].join(', ')
-}
-
-const processEnum = (name, members) => {
-    const capName = capitalize(name)
-    enumsLookup[capName] = members
-
-    return handlebars.compile(templates.enum, {noEscape: true})({
-        name: capName,
-        fields: members.map((m, i) => {
-            if (i === m.length) return {name: m}
-            return {name: m, delimiter: true}
-        })
-    })
-}
-
-const writeContent = (className, content, using = undefined, ns = undefined, subPath = '') => {
-    const filePath = `./build/${subPath}${className}`
-    const nsData = {name: ns ? ns : 'gen', content: content, using: using}
-    fs.writeFileSync(filePath, nsTemplate(nsData))
-}
+const $ = require('./data')
+const utils = require('./utils')
 
 
 //
 // actually building
 //
-
+utils.makeSureDirExists('./build')
 
 //
 // build global enums if any
-const globalEnums = db.customTypes.filter(ct => {
+const globalEnums = $.db.customTypes.filter(ct => {
     return ct.cases.filter(member => {
         return member.args.length === 0
     }).length > 0
 })
 
 globalEnums.forEach(gEnum => {
-    const result = processEnum(gEnum.name, gEnum.cases.map(m => m.name))
-    writeContent(gEnum.name, {item: result})
+    const result = utils.processEnum(gEnum.name, gEnum.cases.map(m => m.name))
+    utils.writeContent(gEnum.name, {item: result})
 })
 
 //
 // build table types
-const tableTypes = db.sheets.filter(sh => /^.+_type$/.test(sh.name))
+const tableTypes = $.db.sheets.filter(sh => /^.+_type$/.test(sh.name))
 tableTypes.forEach(tableType => {
 
     const typeName = tableType.name.replace('_type', '')
@@ -78,7 +31,7 @@ tableTypes.forEach(tableType => {
     let definingField = -1
 
     const templateData = {
-        name: capitalize(typeName),
+        name: utils.capitalize(typeName),
         fields: tableType.columns.length > 0 ? [] : null,
         constructors: tableType.lines.length > 0 ? [] : null
     }
@@ -87,11 +40,11 @@ tableTypes.forEach(tableType => {
         return Number.parseInt(column.typeStr.match(/^\d+/)) === 5
     })
     localEnums.forEach(en => {
-        content.push({item: processEnum(en.name, en.typeStr.match(/[^(\d+:?)].*/)[0].split(','))})
+        content.push({item: utils.processEnum(en.name, en.typeStr.match(/[^(\d+:?)].*/)[0].split(','))})
     })
 
     tableType.columns.forEach((column, i) => {
-        const columnType = typeToInt(column.typeStr)
+        const columnType = utils.typeToInt(column.typeStr)
         switch (columnType) {
             case 0: break
             case 1:
@@ -106,7 +59,7 @@ tableTypes.forEach(tableType => {
             case 5:
                 templateData.fields[i] = {
                     name: column.name,
-                    type: capitalize(column.name)
+                    type: utils.capitalize(column.name)
                 }
                 break
             case 6: break
@@ -115,7 +68,7 @@ tableTypes.forEach(tableType => {
             case 9: break
             case 10: break
             case 11:
-                using.push({type: 'UnityEngine'})
+                using.push('UnityEngine')
                 templateData.fields[i] = {
                     name: column.name,
                     type: 'Color'
@@ -124,13 +77,13 @@ tableTypes.forEach(tableType => {
         }
         if (!column.opt) {
             if (definingField > -1)
-                throw 'Cannot have more then one defining fields in type ' + capitalize(typeName)
+                throw 'Cannot have more then one defining fields in type ' + utils.capitalize(typeName)
             definingField = i
         }
     })
 
     const resolveValueByColumnType = (column, lineKey, lineValue) => {
-        const columnType = typeToInt(column.typeStr)
+        const columnType = utils.typeToInt(column.typeStr)
         switch (columnType) {
             case 0: break
             case 1:
@@ -139,8 +92,8 @@ tableTypes.forEach(tableType => {
             case 3: break
             case 4: break
             case 5:
-                const enumName = capitalize(lineKey)
-                const enumElement = enumsLookup[enumName][lineValue]
+                const enumName = utils.capitalize(lineKey)
+                const enumElement = $.lookup.enums[enumName][lineValue]
                 return `${enumName}.${enumElement}`
             case 6: break
             case 7: break
@@ -148,7 +101,7 @@ tableTypes.forEach(tableType => {
             case 9: break
             case 10: break
             case 11:
-                return `new Color(${longToRgbStr(lineValue)})`
+                return `new Color(${utils.longToRgbStr(lineValue)})`
         }
     }
 
@@ -162,26 +115,27 @@ tableTypes.forEach(tableType => {
             values: values
         })
     })
-    content.push({item: handlebars.compile(templates.tt, {noEscape: true})(templateData)})
-    writeContent(capitalize(typeName), content, using)
+    content.push({item: $.template.tableType(templateData)})
+    utils.writeContent(utils.capitalize(typeName), content, using)
     // console.log(templateData)
 })
 
 //
 // build activities
-const activities = db.sheets.filter(sh => sh.name === "activity")[0]
+const activities = $.db.sheets.filter(sh => sh.name === "activity")[0]
 
-if (!fs.existsSync('./build/activity')) fs.mkdirSync('./build/activity')
+utils.makeSureDirExists('./build/activity')
 
 activities.lines.forEach(line => {
     const templateData = {
-        name: capitalize(line.id),
+        name: utils.capitalize(line.id),
         categoryType: 'Category',
-        categoryValue: enumsLookup['Category'][line.category[0]]
+        categoryValue: $.lookup.enums['Category'][line.category[0]]
     }
 
-    writeContent(capitalize(line.id), {item: handlebars.compile(templates.activity, {noEscape: true})(templateData)}, 
-        undefined, 'gen.activity', 'activity/')
+    utils.writeContent(utils.capitalize(line.id), {item: $.template.activity(templateData)},
+        [], 'activity/', 'gen.activity')
 })
 
-// console.log(enumsLookup)
+
+console.log($.lookup.enums)
