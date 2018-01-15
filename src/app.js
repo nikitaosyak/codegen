@@ -1,5 +1,3 @@
-const util = require('util')
-
 //
 // reading templates and database
 const fs = require('fs')
@@ -45,7 +43,7 @@ const processEnum = (name, members) => {
 }
 
 const writeContent = (className, content, using = undefined, ns = undefined, subPath = '') => {
-    const filePath = util.format('./build/%s%s.cs', subPath, className)
+    const filePath = `./build/${subPath}${className}`
     const nsData = {name: ns ? ns : 'gen', content: content, using: using}
     fs.writeFileSync(filePath, nsTemplate(nsData))
 }
@@ -136,21 +134,21 @@ tableTypes.forEach(tableType => {
         switch (columnType) {
             case 0: break
             case 1:
-                return util.format('"%s"', lineValue)
+                return `"${lineValue}"`
             case 2: break
             case 3: break
             case 4: break
             case 5:
                 const enumName = capitalize(lineKey)
                 const enumElement = enumsLookup[enumName][lineValue]
-                return util.format('%s.%s', enumName, enumElement)
+                return `${enumName}.${enumElement}`
             case 6: break
             case 7: break
             case 8: break
             case 9: break
             case 10: break
             case 11:
-                return util.format('new Color(%s)', longToRgbStr(lineValue))
+                return `new Color(${longToRgbStr(lineValue)})`
         }
     }
 
