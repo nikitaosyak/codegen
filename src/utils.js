@@ -41,12 +41,13 @@ const self = {
 
     //
     // building utils
-    processEnum: (name, members) => {
+    processEnum: (name, modifier, members) => {
         const capName = self.capitalize(name)
         $.lookup.enums[capName] = members
 
         return $.template.enum({
             name: capName,
+            modifier: modifier,
             fields: members.map((m, i) => {
                 if (i === m.length) return {name: m}
                 return {name: m, delimiter: true}

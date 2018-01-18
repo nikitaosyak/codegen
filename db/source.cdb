@@ -57,7 +57,7 @@
 					"display": null
 				},
 				{
-					"typeStr": "9:TemplateType",
+					"typeStr": "9:StatisticsTypes",
 					"name": "type",
 					"display": null
 				}
@@ -71,7 +71,7 @@
 						}
 					],
 					"type": [
-						4,
+						3,
 						"races"
 					],
 					"category": [
@@ -85,13 +85,13 @@
 							"state": "health"
 						}
 					],
-					"type": [
-						3,
-						0,
-						100
-					],
 					"category": [
 						0
+					],
+					"type": [
+						1,
+						0,
+						10
 					]
 				},
 				{
@@ -101,13 +101,13 @@
 							"state": "smalltalk"
 						}
 					],
-					"type": [
-						3,
-						0,
-						100
-					],
 					"category": [
 						1
+					],
+					"type": [
+						1,
+						0,
+						10
 					]
 				},
 				{
@@ -118,9 +118,8 @@
 					],
 					"type": [
 						0,
-						"",
-						"man",
-						"noMan"
+						"MAN",
+						"NOMAN"
 					]
 				}
 			],
@@ -159,7 +158,7 @@
 					"opt": true
 				},
 				{
-					"typeStr": "9:TemplateType",
+					"typeStr": "9:StatisticsTypes",
 					"name": "type",
 					"display": null
 				}
@@ -171,7 +170,7 @@
 						0
 					],
 					"type": [
-						2,
+						1,
 						0,
 						8
 					],
@@ -183,7 +182,7 @@
 						0
 					],
 					"type": [
-						3,
+						1,
 						0,
 						10
 					]
@@ -193,15 +192,15 @@
 					"category": [
 						1
 					],
-					"type": [
-						3,
-						0,
-						10
-					],
 					"children": [
 						{
 							"activity": "talk"
 						}
+					],
+					"type": [
+						1,
+						0,
+						10
 					]
 				},
 				{
@@ -209,15 +208,15 @@
 					"category": [
 						1
 					],
-					"type": [
-						3,
-						0,
-						10
-					],
 					"children": [
 						{
 							"activity": "pray"
 						}
+					],
+					"type": [
+						1,
+						0,
+						10
 					]
 				},
 				{
@@ -225,15 +224,15 @@
 					"category": [
 						1
 					],
-					"type": [
-						3,
-						0,
-						10
-					],
 					"children": [
 						{
 							"activity": "quest"
 						}
+					],
+					"type": [
+						1,
+						0,
+						10
 					]
 				}
 			],
@@ -399,15 +398,11 @@
 	],
 	"customTypes": [
 		{
-			"name": "TemplateType",
+			"name": "StatisticsTypes",
 			"cases": [
 				{
 					"name": "BinaryEnum",
 					"args": [
-						{
-							"name": "name",
-							"typeStr": "1"
-						},
 						{
 							"name": "v1",
 							"typeStr": "1"
@@ -415,15 +410,6 @@
 						{
 							"name": "v2",
 							"typeStr": "1"
-						}
-					]
-				},
-				{
-					"name": "Logical",
-					"args": [
-						{
-							"name": "v",
-							"typeStr": "2"
 						}
 					]
 				},
@@ -441,7 +427,7 @@
 					]
 				},
 				{
-					"name": "Range",
+					"name": "FloatRange",
 					"args": [
 						{
 							"name": "min",

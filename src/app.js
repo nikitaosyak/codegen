@@ -9,13 +9,12 @@ utils.makeSureDirExists('./build')
 //
 // build global enums if any
 const globalEnums = $.db.customTypes.filter(ct => {
-    return ct.cases.filter(member => {
-        return member.args.length === 0
-    }).length > 0
+    const zeroArgsCases = ct.cases.filter(member => member.args.length === 0)
+    return ct.cases.length === zeroArgsCases.length
 })
 
 globalEnums.forEach(gEnum => {
-    const result = utils.processEnum(gEnum.name, gEnum.cases.map(m => m.name))
+    const result = utils.processEnum(gEnum.name, 'public', gEnum.cases.map(m => m.name))
     utils.writeContent(gEnum.name, {item: result})
 })
 
@@ -39,7 +38,7 @@ tableTypes.forEach(tableType => {
         return Number.parseInt(column.typeStr.match(/^\d+/)) === 5
     })
     localEnums.forEach(en => {
-        content.push({item: utils.processEnum(en.name, en.typeStr.match(/[^(\d+:?)].*/)[0].split(','))})
+        content.push({item: utils.processEnum(en.name, 'public', en.typeStr.match(/[^(\d+:?)].*/)[0].split(','))})
     })
 
     tableType.columns.forEach((column, i) => {
