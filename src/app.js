@@ -99,6 +99,11 @@ tableTypes.forEach(tableType => {
 //
 // build base entities
 
+// entity base interface
+const baseInterface = 'Entity'
+utils.writeContent(`I${baseInterface}`, {item: $.template.iEntity({ name: baseInterface, category: true })})
+
+// find entity tables
 const entityTables = $.db.sheets.filter(sh => {
     if (/^.+_type$/.test(sh.name)) return undefined
     if (/^.+@.+$/.test(sh.name)) return undefined
@@ -108,14 +113,34 @@ const entityTables = $.db.sheets.filter(sh => {
 entityTables.forEach(entityTable => {
     utils.makeSureDirExists(`./build/${entityTable.name}`)
 
-    //
-    // create interface for entity class
     const entityName = utils.capitalize(entityTable.name)
     const entityInferface = `I${entityName}`
     const directory = `${entityTable.name}/`
     const namespace = `gen.${entityTable.name}`
 
-    utils.writeContent(entityInferface, {item: $.template.iEntity({name: entityName})},
+    const childLookup = []
+    const entityChildren = $.db.sheets.filter(_ =>
+        new RegExp(`^${entityTable.name}@children$`).test(_.name)
+    )
+    if (entityChildren.length === 1) {
+        entityChildren[0].columns.forEach(column => {
+            const tableLink = column.typeStr.replace(/^\d+:?/, '')
+            childLookup.push({link: tableLink, using: `gen.${tableLink}`})
+        })
+    } else if (entityChildren.length > 1) {
+        throw `Impossible children count of ${entityChildren.length} found in entity ${entityName}`
+    }
+
+    const childInterface = childLookup.length === 0 ? undefined :
+        childLookup.length > 1 ? baseInterface :
+            utils.capitalize(childLookup[0].link)
+
+    utils.writeContent(entityInferface, {item:
+            $.template.iEntity({
+                name: entityName,
+                extends: baseInterface,
+                childInterface: childInterface
+            })},
         [], directory, namespace)
 
     //
@@ -126,10 +151,20 @@ entityTables.forEach(entityTable => {
         utils.templateAssignImplementation(templateData, entityInferface)
         utils.templateAssignCategory(templateData, line, entityTable.columns)
 
+        const using = line.children ? ['System.Collections.Generic'] : []
+        const childrenList = []
+        line.children && line.children.forEach(ch => {
+            Object.keys(ch).forEach(k => {
+                using.push(childLookup.filter(l => l.link === k).map(l => l.using)[0])
+                childrenList.push(utils.capitalize(ch[k]))
+            })
+        })
+        utils.templateAssignChildList(templateData, childrenList, childInterface)
+
         utils.writeContent(
             templateData.name,
             {item: $.template.entity(templateData)},
-            [], directory, namespace)
+            using, directory, namespace)
     })
 })
 

@@ -1,3 +1,8 @@
-public interface I{{name}} {
+public interface I{{name}}{{#extends}} : I{{this}} {{/extends}} {
+{{#category}}
     Category category { get };
+{{/category}}
+{{#childInterface}}
+    List<I{{.}}> children { get };
+{{/childInterface}}
 }

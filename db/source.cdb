@@ -336,7 +336,8 @@
 					],
 					"children": [
 						{
-							"activity": "talk"
+							"activity": "talk",
+							"state": "smalltalk"
 						},
 						{
 							"activity": "pray"

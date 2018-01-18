@@ -13,8 +13,17 @@ const self = {
         fs.mkdirSync(v)
     },
     writeContent: (className, content, using = [], subPath = '', namespace = 'gen') => {
+
+        // get rid of using duplicates
+        const actualUsing = []
+        using.forEach(u => {
+            if (actualUsing.indexOf(u) > -1) return
+            actualUsing.push(u)
+        })
+
+        // write file on given path
         const filePath = `./build/${subPath}${className}.cs`
-        const nsData = {name: namespace, content: content, using: using}
+        const nsData = {name: namespace, content: content, using: actualUsing}
         fs.writeFileSync(filePath, $.template.namespace(nsData))
     },
 
@@ -96,6 +105,16 @@ const self = {
             )
         }
         Object.assign(template, result)
+    },
+
+    templateAssignChildList: (template, childrenList, childInterface) => {
+        if (childrenList.length === 0) return
+        Object.assign(template, {
+            children: {
+                childInterface: childInterface,
+                classNames: childrenList
+            }
+        })
     }
 }
 
