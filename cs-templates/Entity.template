@@ -1,9 +1,9 @@
 public struct {{name}} : {{entityType}} {
-	public static Category CATEGORY = {{category}};
+	public static readonly Category CATEGORY = {{category}};
     public Category category { get { return {{name}}.CATEGORY; } }
 
     {{#children}}
-    public static List<I{{childInterface}}> CHILDREN = new[] { {{#each classNames}}{{this}}{{#unless @last}}, {{/unless}}{{/each}} };
+    public static readonly List<I{{childInterface}}> CHILDREN = new[] { {{#each classNames}}{{this}}{{#unless @last}}, {{/unless}}{{/each}} };
     public List<I{{childInterface}}> children { get { return {{../name}}.CHILDREN; } }
     {{/children}}
 }

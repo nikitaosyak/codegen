@@ -118,6 +118,7 @@
 					],
 					"type": [
 						0,
+						"",
 						"man",
 						"noMan"
 					]
@@ -403,6 +404,10 @@
 				{
 					"name": "BinaryEnum",
 					"args": [
+						{
+							"name": "name",
+							"typeStr": "1"
+						},
 						{
 							"name": "v1",
 							"typeStr": "1"

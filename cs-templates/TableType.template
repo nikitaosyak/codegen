@@ -1,7 +1,7 @@
 public struct {{name}} {
 
 {{#each fields}}
-    public {{type}} {{name}};
+    public readonly {{type}} {{name}};
 {{/each}}
 
     private {{name}}({{#each fields}}{{name}}:{{type}}{{#unless @last}}, {{/unless}}{{/each}}) {
