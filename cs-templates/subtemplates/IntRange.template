@@ -1,0 +1,4 @@
+
+public readonly int min = {{min}};
+public readonly int max = {{max}};
+public int current;

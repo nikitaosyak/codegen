@@ -1,45 +1,6 @@
 {
 	"sheets": [
 		{
-			"name": "race_type",
-			"columns": [
-				{
-					"typeStr": "1",
-					"name": "name",
-					"display": null
-				},
-				{
-					"typeStr": "5:BIPED,QUADRIPED,OCTOPED,ZEROPED",
-					"name": "limbs",
-					"opt": true
-				},
-				{
-					"typeStr": "11",
-					"name": "skin",
-					"opt": true
-				}
-			],
-			"lines": [
-				{
-					"name": "Human",
-					"skin": 15776078,
-					"limbs": 0
-				},
-				{
-					"name": "Pickle",
-					"limbs": 3,
-					"skin": 11074452
-				},
-				{
-					"name": "Octopus",
-					"limbs": 2,
-					"skin": 9385643
-				}
-			],
-			"separators": [],
-			"props": {}
-		},
-		{
 			"name": "statistic",
 			"columns": [
 				{
@@ -54,7 +15,7 @@
 				{
 					"typeStr": "8",
 					"name": "children",
-					"display": null
+					"opt": true
 				},
 				{
 					"typeStr": "9:StatisticsTypes",
@@ -65,66 +26,81 @@
 			"lines": [
 				{
 					"id": "race",
-					"children": [
-						{
-							"state": "limbs"
-						}
-					],
-					"type": [
-						3,
-						"races"
-					],
-					"category": [
-						0
-					]
-				},
-				{
-					"id": "vigor",
-					"children": [
-						{
-							"state": "health"
-						}
-					],
 					"category": [
 						0
 					],
 					"type": [
-						1,
-						0,
-						10
-					]
-				},
-				{
-					"id": "honesty",
+						0
+					],
 					"children": [
 						{
-							"state": "smalltalk"
+							"intent": "killAllHumans"
+						},
+						{
+							"intent": "flirt"
 						}
-					],
-					"category": [
-						1
-					],
-					"type": [
-						1,
-						0,
-						10
 					]
 				},
 				{
 					"id": "sex",
-					"children": [],
 					"category": [
 						0
 					],
 					"type": [
+						1
+					],
+					"children": [
+						{
+							"intent": "cook"
+						},
+						{
+							"intent": "flirt"
+						}
+					]
+				},
+				{
+					"id": "vigor",
+					"category": [
+						0
+					],
+					"type": [
+						2,
 						0,
-						"MAN",
-						"NOMAN"
+						10
+					],
+					"children": [
+						{
+							"intent": "becomeStronger"
+						}
+					]
+				},
+				{
+					"id": "piety",
+					"category": [
+						3
+					],
+					"type": [
+						2,
+						0,
+						10
+					],
+					"children": [
+						{
+							"intent": "worship"
+						}
 					]
 				}
 			],
-			"separators": [],
-			"props": {}
+			"separators": [
+				0,
+				2
+			],
+			"props": {
+				"separatorTitles": [
+					"regular stats",
+					"irregular stats"
+				]
+			}
 		},
 		{
 			"name": "statistic@children",
@@ -135,13 +111,13 @@
 			"lines": [],
 			"columns": [
 				{
-					"typeStr": "6:state",
-					"name": "state"
+					"typeStr": "6:intent",
+					"name": "intent"
 				}
 			]
 		},
 		{
-			"name": "state",
+			"name": "intent",
 			"columns": [
 				{
 					"typeStr": "0",
@@ -158,37 +134,58 @@
 					"opt": true
 				},
 				{
-					"typeStr": "9:StatisticsTypes",
-					"name": "type",
-					"display": null
+					"typeStr": "8",
+					"name": "restrictions"
+				},
+				{
+					"typeStr": "4",
+					"name": "entropy"
 				}
 			],
 			"lines": [
 				{
-					"id": "limbs",
+					"id": "killAllHumans",
 					"category": [
-						0
+						1
 					],
-					"type": [
-						1,
-						0,
-						8
+					"entropy": 1,
+					"restrictions": [
+						{
+							"values": [
+								2,
+								[
+									1
+								]
+							]
+						}
 					],
-					"children": []
-				},
-				{
-					"id": "health",
-					"category": [
-						0
-					],
-					"type": [
-						1,
-						0,
-						10
+					"children": [
+						{
+							"activity": "attackComrade"
+						}
 					]
 				},
 				{
-					"id": "smalltalk",
+					"id": "flirt",
+					"restrictions": [
+						{
+							"values": [
+								2,
+								[
+									0
+								]
+							]
+						},
+						{
+							"values": [
+								3,
+								[
+									1
+								]
+							]
+						}
+					],
+					"entropy": 0,
 					"category": [
 						1
 					],
@@ -196,56 +193,90 @@
 						{
 							"activity": "talk"
 						}
-					],
-					"type": [
-						1,
-						0,
-						10
 					]
 				},
 				{
-					"id": "faith",
+					"id": "cook",
+					"restrictions": [
+						{
+							"values": [
+								3,
+								[
+									1
+								]
+							]
+						}
+					],
+					"entropy": 2,
 					"category": [
 						1
 					],
 					"children": [
 						{
-							"activity": "pray"
+							"activity": "useInventory"
 						}
-					],
-					"type": [
-						1,
-						0,
-						10
 					]
 				},
 				{
-					"id": "questing",
+					"id": "worship",
+					"category": [
+						3
+					],
+					"entropy": 1,
+					"restrictions": [
+						{
+							"values": [
+								1
+							]
+						}
+					],
+					"children": [
+						{
+							"activity": "useInventory"
+						}
+					]
+				},
+				{
+					"id": "becomeStronger",
+					"restrictions": [
+						{
+							"values": [
+								1
+							]
+						}
+					],
+					"entropy": 0.5,
+					"category": [
+						0
+					],
+					"children": [
+						{
+							"activity": "useInventory"
+						}
+					]
+				},
+				{
+					"id": "socialize",
+					"restrictions": [
+						{
+							"values": [
+								0
+							]
+						}
+					],
+					"entropy": 1,
 					"category": [
 						1
 					],
 					"children": [
 						{
-							"activity": "quest"
+							"activity": "talk"
 						}
-					],
-					"type": [
-						1,
-						0,
-						10
 					]
 				}
 			],
-			"separators": [
-				0,
-				2
-			],
-			"props": {
-				"separatorTitles": [
-					"required states",
-					"optional states"
-				]
-			}
+			"separators": [],
+			"props": {}
 		},
 		{
 			"name": "activity",
@@ -263,21 +294,21 @@
 			],
 			"lines": [
 				{
-					"id": "talk",
-					"category": [
-						2
-					]
-				},
-				{
-					"id": "pray",
+					"id": "attackComrade",
 					"category": [
 						0
 					]
 				},
 				{
-					"id": "quest",
+					"id": "talk",
 					"category": [
 						1
+					]
+				},
+				{
+					"id": "useInventory",
+					"category": [
+						0
 					]
 				}
 			],
@@ -285,7 +316,7 @@
 			"props": {}
 		},
 		{
-			"name": "state@children",
+			"name": "intent@children",
 			"props": {
 				"hide": true
 			},
@@ -336,22 +367,7 @@
 					],
 					"children": [
 						{
-							"activity": "talk",
-							"state": "smalltalk"
-						},
-						{
-							"activity": "pray"
-						}
-					]
-				},
-				{
-					"id": "tornLimb",
-					"category": [
-						0
-					],
-					"children": [
-						{
-							"state": "limbs"
+							"activity": "talk"
 						}
 					]
 				},
@@ -362,7 +378,7 @@
 					],
 					"children": [
 						{
-							"state": "questing"
+							"intent": "becomeStronger"
 						}
 					]
 				}
@@ -384,14 +400,29 @@
 					"opt": true
 				},
 				{
-					"typeStr": "6:state",
-					"name": "state",
+					"typeStr": "6:intent",
+					"name": "intent",
 					"opt": true
 				},
 				{
 					"typeStr": "6:activity",
 					"name": "activity",
 					"opt": true
+				}
+			]
+		},
+		{
+			"name": "intent@restrictions",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "9:EntityRestrictions",
+					"name": "values",
+					"display": null
 				}
 			]
 		}
@@ -401,17 +432,12 @@
 			"name": "StatisticsTypes",
 			"cases": [
 				{
-					"name": "BinaryEnum",
-					"args": [
-						{
-							"name": "v1",
-							"typeStr": "1"
-						},
-						{
-							"name": "v2",
-							"typeStr": "1"
-						}
-					]
+					"name": "Race",
+					"args": []
+				},
+				{
+					"name": "Sex",
+					"args": []
 				},
 				{
 					"name": "IntRange",
@@ -464,6 +490,79 @@
 				{
 					"name": "LINGUISTIC",
 					"args": []
+				},
+				{
+					"name": "MENTAL",
+					"args": []
+				}
+			]
+		},
+		{
+			"name": "Race",
+			"cases": [
+				{
+					"name": "HUMAN",
+					"args": []
+				},
+				{
+					"name": "ORC",
+					"args": []
+				},
+				{
+					"name": "NONE",
+					"args": []
+				}
+			]
+		},
+		{
+			"name": "Sex",
+			"cases": [
+				{
+					"name": "MAN",
+					"args": []
+				},
+				{
+					"name": "WOMAN",
+					"args": []
+				},
+				{
+					"name": "OTHER",
+					"args": []
+				},
+				{
+					"name": "NONE",
+					"args": []
+				}
+			]
+		},
+		{
+			"name": "EntityRestrictions",
+			"cases": [
+				{
+					"name": "Any",
+					"args": []
+				},
+				{
+					"name": "Statistical",
+					"args": []
+				},
+				{
+					"name": "Racial",
+					"args": [
+						{
+							"name": "v",
+							"typeStr": "9:Race"
+						}
+					]
+				},
+				{
+					"name": "Sexual",
+					"args": [
+						{
+							"name": "v",
+							"typeStr": "9:Sex"
+						}
+					]
 				}
 			]
 		}
