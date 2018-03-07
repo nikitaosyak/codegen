@@ -24,7 +24,7 @@ const self = {
         // write file on given path
         const filePath = `./build/${subPath}${className}.cs`
         const nsData = {name: namespace, content: content, using: actualUsing}
-        fs.writeFileSync(filePath, $.template.namespace(nsData))
+        // fs.writeFileSync(filePath, $.template.namespace(nsData))
     },
 
     //
