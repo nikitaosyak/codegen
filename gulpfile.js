@@ -11,7 +11,7 @@ gulp.task('build', ['clean'], () =>
 )
 
 gulp.task('watch', () => {
-    gulp.watch(['src/**/*.js', 'db/source.cdb', 'cs-templates/**/*.template'], ['build'])
+    gulp.watch(['src/**/*.js', 'db/source.cdb', 'templates/**/*.ejs'], ['build'])
 })
 
 gulp.task('default', ['build', 'watch'])

@@ -24,7 +24,7 @@ const self = {
         // write file on given path
         const filePath = `./build/${subPath}${className}.cs`
         const nsData = {name: namespace, content: content, using: actualUsing}
-        // fs.writeFileSync(filePath, $.template.namespace(nsData))
+        fs.writeFileSync(filePath, content.item.replace(/\t/g, '    '))
     },
 
     //
@@ -48,10 +48,7 @@ const self = {
         return $.template.enum({
             name: capName,
             modifier: modifier,
-            fields: members.map((m, i) => {
-                if (i === m.length) return {name: m}
-                return {name: m, delimiter: true}
-            })
+            fields: members
         })
     },
 
