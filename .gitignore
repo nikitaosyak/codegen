@@ -1,4 +1,4 @@
 .idea/workspace.xml
 build
 node_modules
-package-lock.json
+*.sublime-workspace
