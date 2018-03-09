@@ -29,6 +29,7 @@ const self = {
             typePath: template,
             typeData: content
         }
+        // console.log(renderData)
 
         const subPath = namespace ? namespace.split('.').join('/') + '/' : ''
         ejs.renderFile(`templates/Namespace.ejs`, renderData, undefined, (err, str) => {
@@ -121,10 +122,8 @@ const self = {
     templateAssignChildList: (template, childrenList, childInterface) => {
         if (childrenList.length === 0) return
         Object.assign(template, {
-            children: {
-                childInterface: childInterface,
-                classNames: childrenList
-            }
+            child: childInterface,
+            children: childrenList
         })
     }
 }

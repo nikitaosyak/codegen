@@ -153,8 +153,6 @@ entityTables.forEach(entityTable => {
         namespace
     )
 
-    return
-
     //
     // actually create each entity by line definitions
     entityTable.lines.forEach(line => {
@@ -174,8 +172,11 @@ entityTables.forEach(entityTable => {
         utils.templateAssignChildList(templateData, childrenList, childInterface)
 
         utils.writeContent(
+            'Entity',
             templateData.name,
-            {item: $.template.entity(templateData)},
-            using, directory, namespace)
+            templateData,
+            using,
+            namespace
+        )
     })
 })

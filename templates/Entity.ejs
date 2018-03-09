@@ -1,0 +1,12 @@
+public struct <%- name -%> : <%- entityType -%> {
+
+	public static readonly Category CATEGORY = <%- category %>
+	public Category category { get { return <%- name -%>.CATEGORY; } }
+<% if (locals.children) { %>
+	public static readonly List<I<%-child-%>> CHILDREN = new[] { <%-children.join(', ')-%> };
+	public List<I<%-child-%>> children { get { return <%-name-%>.CHILDREN } }
+<% } -%>
+<% locals.fields&&fields.forEach(field => { -%>
+	FIELD HERE <%-field-%>
+<% }) -%>
+}

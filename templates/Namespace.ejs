@@ -1,5 +1,6 @@
-<%- using.join(';\n') -%>
+<%- using.map(u => `using ${u};\n`).join('') -%>
 namespace <%- name %> {
 
 <%- include(typePath, typeData); %>
+
 }
