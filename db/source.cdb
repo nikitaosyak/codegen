@@ -18,7 +18,7 @@
 					"opt": true
 				},
 				{
-					"typeStr": "9:StatisticsTypes",
+					"typeStr": "9:Statistics",
 					"name": "type",
 					"display": null
 				}
@@ -152,7 +152,7 @@
 					"restrictions": [
 						{
 							"values": [
-								2,
+								3,
 								[
 									1
 								]
@@ -170,7 +170,7 @@
 					"restrictions": [
 						{
 							"values": [
-								2,
+								3,
 								[
 									0
 								]
@@ -178,7 +178,7 @@
 						},
 						{
 							"values": [
-								3,
+								4,
 								[
 									1
 								]
@@ -200,7 +200,7 @@
 					"restrictions": [
 						{
 							"values": [
-								3,
+								4,
 								[
 									1
 								]
@@ -226,28 +226,10 @@
 					"restrictions": [
 						{
 							"values": [
-								1
+								1,
+								"piety"
 							]
 						}
-					],
-					"children": [
-						{
-							"activity": "useInventory"
-						}
-					]
-				},
-				{
-					"id": "becomeStronger",
-					"restrictions": [
-						{
-							"values": [
-								1
-							]
-						}
-					],
-					"entropy": 0.5,
-					"category": [
-						0
 					],
 					"children": [
 						{
@@ -420,7 +402,7 @@
 			"lines": [],
 			"columns": [
 				{
-					"typeStr": "9:EntityRestrictions",
+					"typeStr": "9:Restrictions",
 					"name": "values",
 					"display": null
 				}
@@ -429,7 +411,7 @@
 	],
 	"customTypes": [
 		{
-			"name": "StatisticsTypes",
+			"name": "Statistics",
 			"cases": [
 				{
 					"name": "Race",
@@ -462,15 +444,6 @@
 						{
 							"name": "max",
 							"typeStr": "4"
-						}
-					]
-				},
-				{
-					"name": "Reference",
-					"args": [
-						{
-							"name": "v",
-							"typeStr": "1"
 						}
 					]
 				}
@@ -540,15 +513,37 @@
 			]
 		},
 		{
-			"name": "EntityRestrictions",
+			"name": "Restrictions",
 			"cases": [
 				{
 					"name": "Any",
 					"args": []
 				},
 				{
-					"name": "Statistical",
-					"args": []
+					"name": "StatisticalRaw",
+					"args": [
+						{
+							"name": "name",
+							"typeStr": "1"
+						}
+					]
+				},
+				{
+					"name": "StatisticalNumeric",
+					"args": [
+						{
+							"name": "name",
+							"typeStr": "1"
+						},
+						{
+							"name": "min",
+							"typeStr": "3"
+						},
+						{
+							"name": "max",
+							"typeStr": "3"
+						}
+					]
 				},
 				{
 					"name": "Racial",
