@@ -32,6 +32,7 @@ const self = {
         // console.log(renderData)
 
         const subPath = namespace ? namespace.split('.').join('/') + '/' : ''
+        self.makeSureDirExists(`./build/${subPath}`)
         ejs.renderFile(`templates/Namespace.ejs`, renderData, undefined, (err, str) => {
             if (err) throw err
             fs.writeFileSync(
@@ -55,9 +56,23 @@ const self = {
 
     //
     // building utils
-    processEnum: (name, modifier, members) => {
+    getCustomTypeList: (minArgs, maxArgs) => {
+        return $.db.customTypes
+            .filter(ct => ct.name !== 'Category')
+            .filter(ct => {
+                const args = ct.cases.map(c=>c.args)
+                    .reduce((acc, current) => acc + current.length, 0)
+                return args >= minArgs && args <= maxArgs
+            })
+    },
+
+    processEnum: (name, modifier, members, ns = null) => {
         const capName = self.capitalize(name)
-        $.lookup.enums[capName] = members
+        $.lookup[capName] = {
+            type: 'enum',
+            ns: ns ? `gen.${ns}` : 'gen',
+            fields: members
+        }
 
         return {
             modifier: modifier,
@@ -77,15 +92,15 @@ const self = {
                 return `"${lineValue}"`
             case 5:
                 const enumName = self.capitalize(lineKey)
-                const enumElement = $.lookup.enums[enumName][lineValue]
+                const enumElement = $.lookup[enumName].fields[lineValue]
                 return `${enumName}.${enumElement}`
             case 6: return 'Unknown type ' + columnType
             case 7: return 'Unknown type ' + columnType
             case 8: return 'Unknown type ' + columnType
             case 9:
                 const customType = self.typeDefFromTypeStr(column.typeStr)
-                if (customType in $.lookup.enums) {
-                    const enumElement = $.lookup.enums[customType][lineValue[0]]
+                if (customType in $.lookup && $.lookup[customType].type === 'enum') {
+                    const enumElement = $.lookup[customType].fields[lineValue[0]]
                     return `${customType}.${enumElement}`
                 } else {
                     return 'Unknown custom type ' + columnType
