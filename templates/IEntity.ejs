@@ -1,0 +1,4 @@
+public interface I<%- name -%><%- locals.extends ? `: I${locals.extends}` : '' -%> {
+<%- locals.category ? '\tCategory category { get; }\n' : '' -%>
+<%- locals.child ? `\tList<I${child}> children { get; }\n` : '' -%>
+}

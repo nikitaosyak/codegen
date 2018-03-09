@@ -23,18 +23,18 @@ const self = {
         })
 
         // write file on given path
-        const subPath = namespace ? namespace.split('.').join('/') + '/' : ''
-        const filePath = `./build/${subPath}${className}.cs`
         const renderData = {
             using: actualUsing,
             name: namespace ? `gen.${namespace}` : 'gen', 
-            typePath: subPath ? `${subPath}${template}` : template,
+            typePath: template,
             typeData: content
         }
 
+        const subPath = namespace ? namespace.split('.').join('/') + '/' : ''
         ejs.renderFile(`templates/Namespace.ejs`, renderData, undefined, (err, str) => {
+            if (err) throw err
             fs.writeFileSync(
-                filePath, 
+                `./build/${subPath}${className}.cs`, 
                 str.replace(/\t/g, '    ')
             )
         })
