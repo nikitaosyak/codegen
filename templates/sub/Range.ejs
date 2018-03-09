@@ -1,0 +1,9 @@
+<%- locals.modifier ? `${modifier} ` : '' -%>struct <%-numericCap-%>Range {
+	public readonly <%-numeric-%> min;
+	public readonly <%-numeric-%> max;
+
+	<%-numericCap-%>Range(<%-numeric-%> min, <%-numeric-%> max) {
+		this.min = min;
+		this.max = max;
+	}
+}

@@ -10,10 +10,19 @@ utils.makeSureDirExists('./build')
 // build global types
 {
     const cat = $.db.customTypes.filter(ct => ct.name === 'Category')[0]
+    const enumData = utils.processEnum(
+        cat.name, 
+        'public', 
+        cat.cases.map(c => c.name))
+
     utils.writeContent(
         'Enum',
-        cat.name, 
-        utils.processEnum(cat.name, 'public', cat.cases.map(c => c.name))
+        'Category',
+        {
+            modifier: enumData.modifier,
+            name: 'Category',
+            fields: enumData.fields
+        }
     )
 
     utils.writeContent(
@@ -30,53 +39,35 @@ utils.makeSureDirExists('./build')
 //
 // base types builds first
 utils.getCustomTypeList(0, 0).forEach(custom => {
-    utils.writeContent(
-        'Enum',
-        custom.name,
-        utils.processEnum(
+    const enumData = utils.processEnum(
             custom.name, 
             'public', 
             custom.cases.map(c=>c.name),
-            'types'),
+            'types')
+
+    utils.writeContent(
+        'Enum',
+        enumData.fileName,
+        enumData,
         [], 'types'
         )
-    // custom.columns.forEach((column, i) => {
-    //     const columnType = utils.typeToInt(column.typeStr)
-    //     switch (columnType) {
-    //         case 0: break
-    //         case 1:
-    //             templateData.fields[i] = {
-    //                 name: column.name,
-    //                 type: 'String'
-    //             }
-    //             break
-    //         case 2: break
-    //         case 3: break
-    //         case 4: break
-    //         case 5:
-    //             templateData.fields[i] = {
-    //                 name: column.name,
-    //                 type: utils.capitalize(column.name)
-    //             }
-    //             break
-    //         case 6: break
-    //         case 7: break
-    //         case 8: break
-    //         case 9: break
-    //         case 10: break
-    //         case 11:
-    //             using.push('UnityEngine')
-    //             templateData.fields[i] = {
-    //                 name: column.name,
-    //                 type: 'Color'
-    //             }
-    //             break
-    //     }
 })
 
 utils.getCustomTypeList(1, 100).forEach(custom => {
-    console.log(custom)
+    custom.cases.forEach(c => {
+        if (c.name in $.lookup) return
+        const ns = 'types.' + custom.name.toLowerCase()
+        const typeData = utils.processType(
+            c.name, 'public',
+            c.args, ns
+            )
 
+        if (!typeData.template) return
+        // console.log(typeData)
+        utils.writeContent(
+            typeData.template, c.name,
+            typeData, typeData.using, ns)
+    })
 })
 
 //
@@ -129,8 +120,9 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
         //
         // actually create each entity by line definitions
         entityTable.lines.forEach(line => {
+            // console.log(line)
             const templateData = {}
-            utils.templateAssignName(templateData, line)
+            utils.templateAssignName(templateData, entityName, line)
             utils.templateAssignImplementation(templateData, entityInferface)
             utils.templateAssignCategory(templateData, line, entityTable.columns)
 
@@ -143,10 +135,11 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
                 })
             })
             utils.templateAssignChildList(templateData, childrenList, childInterface)
+            // utils.templateAssignFields(templateData, line, entityTable.columns, Object.keys(line).filter(k => ['id', 'category', 'children'].indexOf(k) < 0))
 
             utils.writeContent(
                 'Entity',
-                templateData.name,
+                templateData.fileName,
                 templateData,
                 using,
                 namespace

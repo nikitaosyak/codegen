@@ -7,6 +7,6 @@ public struct <%- name -%> : <%- entityType -%> {
 	public List<I<%-child-%>> children { get { return <%-name-%>.CHILDREN } }
 <% } -%>
 <% locals.fields&&fields.forEach(field => { -%>
-	FIELD HERE <%-field-%>
+	public <%-field.type-%> <%-field.name-%>;
 <% }) -%>
 }

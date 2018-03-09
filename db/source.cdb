@@ -70,7 +70,7 @@
 					],
 					"children": [
 						{
-							"intent": "becomeStronger"
+							"intent": "killAllHumans"
 						}
 					]
 				},
@@ -360,7 +360,7 @@
 					],
 					"children": [
 						{
-							"intent": "becomeStronger"
+							"intent": "killAllHumans"
 						}
 					]
 				}

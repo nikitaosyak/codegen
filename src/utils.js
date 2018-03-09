@@ -75,9 +75,37 @@ const self = {
         }
 
         return {
+            fileName: `${name}Enum`,
             modifier: modifier,
-            name: capName,
+            name: `${name}Enum`,
             fields: members
+        }
+    },
+
+    processType: (name, modifier, members, ns = null) => {
+        $.lookup[name] = {
+            type: 'custom',
+            ns: ns ? `gen.${ns}` : 'gen'
+        }
+
+        switch (name) {
+            case 'IntRange':
+                return {
+                    template: 'sub/Range',
+                    modifier: 'public',
+                    numericCap: 'Int',
+                    numeric: 'int'
+                }
+            case 'FloatRange':
+                return {
+                    template: 'sub/Range',
+                    modifier: 'public',
+                    numericCap: 'Float',
+                    numeric: 'float'
+                }
+        }
+
+        return {
         }
     },
 
@@ -98,12 +126,19 @@ const self = {
             case 7: return 'Unknown type ' + columnType
             case 8: return 'Unknown type ' + columnType
             case 9:
-                const customType = self.typeDefFromTypeStr(column.typeStr)
+                const customType = self.typeDefFromTypeStr(column.typeStr)[0]
+                // console.log('cstmtype', customType, lineValue)
                 if (customType in $.lookup && $.lookup[customType].type === 'enum') {
                     const enumElement = $.lookup[customType].fields[lineValue[0]]
                     return `${customType}.${enumElement}`
                 } else {
-                    return 'Unknown custom type ' + columnType
+                    const complexType = $.db.customTypes.filter(ct => ct.name === customType)[0]
+                    const typeVariation = complexType.cases[lineValue[0]]
+
+                    if (typeVariation.name in $.lookup) {
+                        return typeVariation.name
+                    }
+                    // console.log('VARIATIONS', complexType, typeVariation)
                 }
             case 10: return 'Unknown type ' + columnType
             case 11:
@@ -115,8 +150,11 @@ const self = {
         return columns.filter(c => c.name === lineId)[0]
     },
 
-    templateAssignName: (template, line) => {
-        const result = {name: self.capitalize(line.id)}
+    templateAssignName: (template, entityName, line) => {
+        const result = {
+            name: `${self.capitalize(line.id)}`,
+            fileName: `${self.capitalize(line.id)}`
+        }
         Object.assign(template, result)
     },
 
@@ -140,6 +178,25 @@ const self = {
             child: childInterface,
             children: childrenList
         })
+    },
+
+    templateAssignFields: (template, line, columns, fieldKeys) => {
+        if (fieldKeys.length === 0) return
+
+        const fields = []
+        fieldKeys.map(fk => {
+            // fields.push({
+            //     type: self.lineValueByColumnType(column, null, line[fk]),
+            //     name: self.lineValueByColumnType(column, null, line[fk]).toLowerCase()
+            // })
+            const column = self.columnByLineId(fk, columns)
+            console.log('->', fk, self.lineValueByColumnType(column, null, line[fk]),  line[fk])
+        })
+
+        Object.assign(template, {fields})
+        // console.log(fieldKeys, fieldKeys.map(fk => self.columnByLineId(fk, columns).typeStr),
+        //     fieldKeys.map(fk => self.lineValueByColumnType(self.columnByLineId(fk, columns), fk)))
+        // console.log(, fieldKeys.map(k => line[k]).join(', '))
     }
 }
 
