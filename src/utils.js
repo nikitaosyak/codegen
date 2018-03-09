@@ -1,5 +1,6 @@
 const fs = require('fs')
 const $ = require('./data')
+const ejs = require('ejs')
 
 const typeStrEnumIdx = /^\d+/
 const typeStrTypeDef = /[^(\d+:?)].*/
@@ -12,7 +13,7 @@ const self = {
         if (fs.existsSync(v)) return
         fs.mkdirSync(v)
     },
-    writeContent: (className, content, using = [], subPath = '', namespace = 'gen') => {
+    writeContent: (template, className, content, using = [], namespace = null) => {
 
         // get rid of using duplicates
         const actualUsing = []
@@ -22,9 +23,21 @@ const self = {
         })
 
         // write file on given path
+        const subPath = namespace ? namespace.split('.').join('/') + '/' : ''
         const filePath = `./build/${subPath}${className}.cs`
-        const nsData = {name: namespace, content: content, using: actualUsing}
-        fs.writeFileSync(filePath, content.item.replace(/\t/g, '    '))
+        const renderData = {
+            using: actualUsing,
+            name: namespace ? `gen.${namespace}` : 'gen', 
+            typePath: subPath ? `${subPath}${template}` : template,
+            typeData: content
+        }
+
+        ejs.renderFile(`templates/Namespace.ejs`, renderData, undefined, (err, str) => {
+            fs.writeFileSync(
+                filePath, 
+                str.replace(/\t/g, '    ')
+            )
+        })
     },
 
     //
@@ -45,11 +58,11 @@ const self = {
         const capName = self.capitalize(name)
         $.lookup.enums[capName] = members
 
-        return $.template.enum({
-            name: capName,
+        return {
             modifier: modifier,
+            name: capName,
             fields: members
-        })
+        }
     },
 
     lineValueByColumnType: (column, lineKey, lineValue) => {

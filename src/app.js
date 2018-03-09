@@ -14,9 +14,11 @@ const globalEnums = $.db.customTypes.filter(ct => {
 })
 
 globalEnums.forEach(gEnum => {
-    console.log(gEnum.name)
-    const result = utils.processEnum(gEnum.name, '', gEnum.cases.map(m => m.name))
-    utils.writeContent(gEnum.name, {item: result})
+    utils.writeContent(
+        'Enum',
+        gEnum.name, 
+        utils.processEnum(gEnum.name, 'public', gEnum.cases.map(m => m.name))
+    )
 })
 
 return
