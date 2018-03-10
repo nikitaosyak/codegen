@@ -30,6 +30,10 @@ utils.makeSureDirExists('./build')
         `IEntity`, 
         { name: 'Entity', category: true }
     )
+
+    utils.writeContent(
+        'IHero',
+        'IHero')
 }
 
 
