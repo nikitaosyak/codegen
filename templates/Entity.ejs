@@ -6,7 +6,10 @@ public struct <%- name -%> : <%- entityType -%> {
 	public static readonly List<I<%-child-%>> CHILDREN = new[] { <%-children.join(', ')-%> };
 	public List<I<%-child-%>> children { get { return <%-name-%>.CHILDREN } }
 <% } -%>
+
 <% locals.fields&&fields.forEach(field => { -%>
-	public <%-field.type-%> <%-field.name-%>;
+	<%-field.modifier ? `${field.modifier} ` : ''-%><%-field.readonly ? 'readonly ' : ''-%><%-field.type-%> <%-field.name-%><%-
+		typeof(field.value) !== `undefined` ? ` = ${field.value}\n` : ` { public get; private set; }\n#if UNITY_EDITOR\n\tpublic void set${field.name}(${field.type} v) { this.${field.name} = v; }\n#endif\n`
+		-%>
 <% }) -%>
 }

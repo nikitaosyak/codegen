@@ -44,10 +44,11 @@ const self = {
 
     //
     // minor utils
-    capitalize: (str) => str.charAt(0).toUpperCase() + str.slice(1),
-    typeToInt: (typeStr) => Number.parseInt(typeStr.match(typeStrEnumIdx)),
-    typeDefFromTypeStr: (typeStr) => typeStr.match(typeStrTypeDef, ''),
-    longToRgbStr: (longColor) => {
+    decapitalize: str => str.charAt(0).toLowerCase() + str.slice(1),
+    capitalize: str => str.charAt(0).toUpperCase() + str.slice(1),
+    typeToInt: typeStr => Number.parseInt(typeStr.match(typeStrEnumIdx)),
+    typeDefFromTypeStr: typeStr => typeStr.match(typeStrTypeDef, ''),
+    longToRgbStr: longColor => {
         const r = (longColor >> 16) & 0xff
         const g = (longColor >> 8) & 0xff
         const b = longColor & 0xff
@@ -84,12 +85,13 @@ const self = {
 
     processType: (name, modifier, members, ns = null) => {
         $.lookup[name] = {
-            type: 'custom',
-            ns: ns ? `gen.${ns}` : 'gen'
+            ns: ns ? `gen.${ns}` : 'gen',
+            fields: members
         }
 
         switch (name) {
             case 'IntRange':
+                $.lookup[name].type = 'range'
                 return {
                     template: 'sub/Range',
                     modifier: 'public',
@@ -97,6 +99,7 @@ const self = {
                     numeric: 'int'
                 }
             case 'FloatRange':
+                $.lookup[name].type = 'range'
                 return {
                     template: 'sub/Range',
                     modifier: 'public',
@@ -104,7 +107,6 @@ const self = {
                     numeric: 'float'
                 }
         }
-
         return {
         }
     },
@@ -164,12 +166,12 @@ const self = {
     },
 
     templateAssignCategory: (template, line, columns) => {
-        const result = {
-            category: self.lineValueByColumnType(
-                self.columnByLineId('category', columns), 'category', line.category
-            )
+        const column = self.columnByLineId('category', columns)
+        const customType = self.typeDefFromTypeStr(column.typeStr)[0]
+        if (customType in $.lookup && $.lookup[customType].type === 'enum') {
+            const enumElement = $.lookup[customType].fields[line.category[0]]
+            Object.assign(template, {category: `${customType}.${enumElement}`})
         }
-        Object.assign(template, result)
     },
 
     templateAssignChildList: (template, childrenList, childInterface) => {
@@ -183,6 +185,9 @@ const self = {
     templateAssignFields: (template, line, columns, fieldKeys) => {
         if (fieldKeys.length === 0) return
 
+        // const column = self.columnByLineId('category', columns)
+        
+
         const fields = []
         fieldKeys.map(fk => {
             // fields.push({
@@ -190,10 +195,54 @@ const self = {
             //     name: self.lineValueByColumnType(column, null, line[fk]).toLowerCase()
             // })
             const column = self.columnByLineId(fk, columns)
-            console.log('->', fk, self.lineValueByColumnType(column, null, line[fk]),  line[fk])
+            const intType = self.typeToInt(column.typeStr)
+            switch(intType) {
+                case 4:
+                    fields.push({
+                        type: 'int', 
+                        name: column.name,
+                        readonly: true, 
+                        modifier: 'public',
+                        value: Number.parseInt(line[fk])
+                    })
+                break
+                case 8:
+                    console.log(column, line[fk])
+                break
+                case 9:
+                    const customType = self.typeDefFromTypeStr(column.typeStr)[0]
+                    const complexType = $.db.customTypes.filter(ct => ct.name === customType)[0]
+                    const complexTypeCase = complexType.cases[Number.parseInt(line[fk][0])]
+                    const name = complexTypeCase.name
+                    if (name in $.lookup) {
+                        if ($.lookup[name].type === 'enum') {
+                            fields.push({
+                                type: `${name}Enum`,
+                                name: fieldKeys.length === 1 ? 'value' : name.toLowerCase()
+                            })
+                        } else if ($.lookup[name].type === 'range') {
+                            let numericType = self.typeToInt($.lookup[name].fields[0].typeStr)
+                            numericType = numericType === 3 ? 'int' : 'float'
+                            // console.log($.lookup[name], line[fk])
+                            fields.push({
+                                type: name,
+                                name: $.lookup[name].type,
+                                readonly: true,
+                                modifier: 'public',
+                                value: `new ${name}(${line[fk].splice(1).join(', ')});`
+                            })
+                            fields.push({
+                                type: numericType,
+                                name: 'value'
+                            })
+                        }
+                    }
+                    // console.log(line[fk])
+            }
+            // console.log('->', fk, customType, line[fk])
         })
 
-        Object.assign(template, {fields})
+        Object.assign(template, {fields: fields})
         // console.log(fieldKeys, fieldKeys.map(fk => self.columnByLineId(fk, columns).typeStr),
         //     fieldKeys.map(fk => self.lineValueByColumnType(self.columnByLineId(fk, columns), fk)))
         // console.log(, fieldKeys.map(k => line[k]).join(', '))

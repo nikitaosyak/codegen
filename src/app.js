@@ -135,7 +135,7 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
                 })
             })
             utils.templateAssignChildList(templateData, childrenList, childInterface)
-            // utils.templateAssignFields(templateData, line, entityTable.columns, Object.keys(line).filter(k => ['id', 'category', 'children'].indexOf(k) < 0))
+            utils.templateAssignFields(templateData, line, entityTable.columns, Object.keys(line).filter(k => ['id', 'category', 'children'].indexOf(k) < 0))
 
             utils.writeContent(
                 'Entity',
