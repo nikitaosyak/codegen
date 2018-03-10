@@ -18,6 +18,11 @@
 					"opt": true
 				},
 				{
+					"typeStr": "8",
+					"name": "restrictions",
+					"opt": true
+				},
+				{
 					"typeStr": "9:Statistics",
 					"name": "type",
 					"display": null
@@ -59,6 +64,30 @@
 					]
 				},
 				{
+					"id": "height",
+					"category": [
+						0
+					],
+					"type": [
+						3,
+						0.1,
+						3,
+						0.1
+					]
+				},
+				{
+					"id": "weight",
+					"category": [
+						0
+					],
+					"type": [
+						3,
+						0,
+						1000,
+						2
+					]
+				},
+				{
 					"id": "vigor",
 					"category": [
 						0
@@ -66,7 +95,8 @@
 					"type": [
 						2,
 						2,
-						8
+						8,
+						1
 					],
 					"children": [
 						{
@@ -82,23 +112,82 @@
 					"type": [
 						2,
 						0,
-						10
+						10,
+						1
 					],
 					"children": [
 						{
 							"intent": "worship"
 						}
 					]
+				},
+				{
+					"id": "teethLength",
+					"category": [
+						0
+					],
+					"type": [
+						2,
+						3,
+						20,
+						1
+					],
+					"restrictions": [
+						{
+							"values": [
+								2,
+								[
+									1
+								]
+							]
+						}
+					]
+				},
+				{
+					"id": "limbsCount",
+					"category": [
+						0
+					],
+					"type": [
+						2,
+						2,
+						6,
+						2
+					]
+				},
+				{
+					"id": "breastSize",
+					"category": [
+						0
+					],
+					"restrictions": [
+						{
+							"values": [
+								3,
+								[
+									1
+								]
+							]
+						}
+					],
+					"type": [
+						2,
+						0,
+						5,
+						1
+					]
 				}
 			],
 			"separators": [
 				0,
-				2
+				4,
+				6
 			],
 			"props": {
 				"separatorTitles": [
 					"regular stats",
-					"irregular stats"
+					"irregular stats",
+					"special stats"
 				]
 			}
 		},
@@ -135,7 +224,8 @@
 				},
 				{
 					"typeStr": "8",
-					"name": "restrictions"
+					"name": "restrictions",
+					"opt": true
 				},
 				{
 					"typeStr": "4",
@@ -152,7 +242,7 @@
 					"restrictions": [
 						{
 							"values": [
-								3,
+								2,
 								[
 									1
 								]
@@ -170,7 +260,7 @@
 					"restrictions": [
 						{
 							"values": [
-								3,
+								2,
 								[
 									0
 								]
@@ -178,7 +268,7 @@
 						},
 						{
 							"values": [
-								4,
+								3,
 								[
 									1
 								]
@@ -200,7 +290,7 @@
 					"restrictions": [
 						{
 							"values": [
-								4,
+								3,
 								[
 									1
 								]
@@ -226,7 +316,7 @@
 					"restrictions": [
 						{
 							"values": [
-								1,
+								0,
 								"piety"
 							]
 						}
@@ -239,13 +329,6 @@
 				},
 				{
 					"id": "socialize",
-					"restrictions": [
-						{
-							"values": [
-								0
-							]
-						}
-					],
 					"entropy": 1,
 					"category": [
 						1
@@ -404,7 +487,22 @@
 				{
 					"typeStr": "9:Restrictions",
 					"name": "values",
-					"display": null
+					"opt": true
+				}
+			]
+		},
+		{
+			"name": "statistic@restrictions",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "9:Restrictions",
+					"name": "values",
+					"opt": true
 				}
 			]
 		}
@@ -431,6 +529,10 @@
 						{
 							"name": "max",
 							"typeStr": "3"
+						},
+						{
+							"name": "step",
+							"typeStr": "3"
 						}
 					]
 				},
@@ -443,6 +545,10 @@
 						},
 						{
 							"name": "max",
+							"typeStr": "4"
+						},
+						{
+							"name": "step",
 							"typeStr": "4"
 						}
 					]
@@ -515,10 +621,6 @@
 		{
 			"name": "Restrictions",
 			"cases": [
-				{
-					"name": "Any",
-					"args": []
-				},
 				{
 					"name": "StatisticalRaw",
 					"args": [
