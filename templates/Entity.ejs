@@ -1,10 +1,16 @@
 public struct <%- name -%> : <%- entityType -%> {
 
-	public static readonly Category CATEGORY = <%- category %>
+	public static readonly Category CATEGORY = <%- category %>;
 	public Category category { get { return <%- name -%>.CATEGORY; } }
 <% if (locals.children) { %>
 	public static readonly List<I<%-child-%>> CHILDREN = new[] { <%-children.join(', ')-%> };
 	public List<I<%-child-%>> children { get { return <%-name-%>.CHILDREN } }
+<% } -%>
+<% if (locals.restrict) {-%>
+
+	
+<% } else { -%>
+	public bool isCompatible(IHero hero) { return true; }
 <% } -%>
 
 <% locals.fields&&fields.forEach(field => { -%>

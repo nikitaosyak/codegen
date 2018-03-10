@@ -91,24 +91,34 @@ const self = {
 
         switch (name) {
             case 'IntRange':
-                $.lookup[name].type = 'range'
-                return {
-                    template: 'sub/Range',
-                    modifier: 'public',
-                    numericCap: 'Int',
-                    numeric: 'int'
-                }
             case 'FloatRange':
                 $.lookup[name].type = 'range'
+                const numeric = name.replace('Range', '')
                 return {
+                    fileName: name,
                     template: 'sub/Range',
                     modifier: 'public',
-                    numericCap: 'Float',
-                    numeric: 'float'
+                    numericCap: numeric,
+                    numeric: numeric.toLowerCase()
+                }
+            case 'StatisticalRaw':
+            case 'StatisticalNumeric':
+                $.lookup[name].type = 'restriction'
+                break
+            case 'Racial':
+            case 'Sexual':
+                $.lookup[name].type = 'restriction'
+                // console.log(members, ns, self.typeDefFromTypeStr(members[0].typeStr)[0])
+                const stat = self.typeDefFromTypeStr(members[0].typeStr)[0]
+                return {
+                    fileName: `${name}Restriction`,
+                    name: `${name}Restriction`,
+                    template: 'sub/EnumRestriction',
+                    statType: stat,
+                    enumType: `${stat}Enum`
                 }
         }
-        return {
-        }
+        return {}
     },
 
     lineValueByColumnType: (column, lineKey, lineValue) => {
@@ -182,7 +192,7 @@ const self = {
         })
     },
 
-    templateAssignFields: (template, line, columns, fieldKeys) => {
+    templateAssignFields: (template, line, columns, fieldKeys, using) => {
         if (fieldKeys.length === 0) return
 
         // const column = self.columnByLineId('category', columns)
@@ -190,10 +200,6 @@ const self = {
 
         const fields = []
         fieldKeys.map(fk => {
-            // fields.push({
-            //     type: self.lineValueByColumnType(column, null, line[fk]),
-            //     name: self.lineValueByColumnType(column, null, line[fk]).toLowerCase()
-            // })
             const column = self.columnByLineId(fk, columns)
             const intType = self.typeToInt(column.typeStr)
             switch(intType) {
@@ -207,7 +213,14 @@ const self = {
                     })
                 break
                 case 8:
-                    console.log(column, line[fk])
+                    if (column.name === 'restrictions') {
+                        line[fk].forEach(lineValue => {
+                            const v = lineValue.values
+                            const complexType = $.db.customTypes.filter(ct => ct.name === 'Restrictions')[0]
+                            const complexTypeCase = complexType.cases[v[0]]
+                            console.log(line.id, complexTypeCase, v)
+                        })
+                    }
                 break
                 case 9:
                     const customType = self.typeDefFromTypeStr(column.typeStr)[0]
@@ -215,6 +228,7 @@ const self = {
                     const complexTypeCase = complexType.cases[Number.parseInt(line[fk][0])]
                     const name = complexTypeCase.name
                     if (name in $.lookup) {
+                        using.push($.lookup[name].ns)
                         if ($.lookup[name].type === 'enum') {
                             fields.push({
                                 type: `${name}Enum`,
@@ -243,9 +257,6 @@ const self = {
         })
 
         Object.assign(template, {fields: fields})
-        // console.log(fieldKeys, fieldKeys.map(fk => self.columnByLineId(fk, columns).typeStr),
-        //     fieldKeys.map(fk => self.lineValueByColumnType(self.columnByLineId(fk, columns), fk)))
-        // console.log(, fieldKeys.map(k => line[k]).join(', '))
     }
 }
 

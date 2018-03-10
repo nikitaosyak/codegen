@@ -1,0 +1,10 @@
+public struct <%-name-%><<%-statType-%>> {
+	public <%-enumType-%> restrictValue;
+	public <%-name-%>(<%-enumType-%> value) {
+		this.restrictValue = value;
+	}
+
+	public bool solve(IHero hero) {
+		return hero.getStatValue<<%-statType-%>, <%-enumType-%>>() == this.restrictValue;
+	}
+}

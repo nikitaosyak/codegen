@@ -28,7 +28,7 @@ utils.makeSureDirExists('./build')
     utils.writeContent(
         'IEntity',
         `IEntity`, 
-        { name: 'Entity', category: true }
+        { name: 'Entity', category: true, restrict: true }
     )
 
     utils.writeContent(
@@ -67,9 +67,8 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
             )
 
         if (!typeData.template) return
-        // console.log(typeData)
         utils.writeContent(
-            typeData.template, c.name,
+            typeData.template, typeData.fileName,
             typeData, typeData.using, ns)
     })
 })
@@ -139,7 +138,11 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
                 })
             })
             utils.templateAssignChildList(templateData, childrenList, childInterface)
-            utils.templateAssignFields(templateData, line, entityTable.columns, Object.keys(line).filter(k => ['id', 'category', 'children'].indexOf(k) < 0))
+            utils.templateAssignFields(
+                templateData, 
+                line, entityTable.columns, 
+                Object.keys(line).filter(k => ['id', 'category', 'children'].indexOf(k) < 0),
+                using)
 
             utils.writeContent(
                 'Entity',
