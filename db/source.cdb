@@ -14,12 +14,12 @@
 				},
 				{
 					"typeStr": "8",
-					"name": "children",
+					"name": "restrictions",
 					"opt": true
 				},
 				{
 					"typeStr": "8",
-					"name": "restrictions",
+					"name": "children",
 					"opt": true
 				},
 				{
@@ -228,12 +228,12 @@
 				},
 				{
 					"typeStr": "8",
-					"name": "children",
+					"name": "restrictions",
 					"opt": true
 				},
 				{
 					"typeStr": "8",
-					"name": "restrictions",
+					"name": "children",
 					"opt": true
 				},
 				{
@@ -424,14 +424,14 @@
 				},
 				{
 					"typeStr": "8",
-					"name": "children",
-					"opt": true
-				},
-				{
-					"typeStr": "8",
 					"name": "restrictions",
 					"opt": true,
 					"display": null
+				},
+				{
+					"typeStr": "8",
+					"name": "children",
+					"opt": true
 				}
 			],
 			"lines": [
