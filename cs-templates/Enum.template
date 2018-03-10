@@ -1,5 +1,0 @@
-{{#modifier}}{{.}} {{/modifier}}enum {{name}} {
-{{#fields}}
-    {{name}}{{#delimiter}},{{/delimiter}}
-{{/fields}}
-};

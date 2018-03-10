@@ -1,4 +1,0 @@
-
-public readonly float min = {{min}};
-public readonly float max = {{max}};
-public float current;
