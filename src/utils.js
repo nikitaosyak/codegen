@@ -109,25 +109,24 @@ const self = {
             case 'Enumeric':
             case 'EnumericNegation':
                 $.lookup[name].type = 'restriction'
+
+                let className = ''
+                switch(name) {
+                    case 'Raw': className = `RestrictStat`; break;
+                    case 'RawNegation': className = `RestrictStatNegation`; break;
+                    case 'NumericMin': className = `RestrictStatMin`; break;
+                    case 'NumericMax': className = `RestrictStatMax`; break;
+                    case 'Enumeric': className = `RestrictEnum`; break;
+                    case 'EnumericNegation': className = `RestrictEnumNegation`; break;
+                }
+                $.lookup[name].className = className
                 const restrictions = []
                 $.db.sheets.forEach(sh => {
                     const lines = sh.lines.filter(l => 'restrictions' in l)
                     if (lines.length === 0) return
                     lines.forEach(l => l.restrictions.forEach(r => {
                         if (r.values[0] !== idx) return
-                        const v = r.values
-                        // console.log(l.id, r)
-                        const typeOrEnum = v.length > 1 ? self.capitalize(v[1]) : ''
-                        let className = ''
-                        switch(name) {
-                            case 'Raw': className = `Restrict${typeOrEnum}`; break;
-                            case 'RawNegation': className = `Restrict${typeOrEnum}Negation`; break;
-                            case 'NumericMin': className = `Restrict${typeOrEnum}Min`; break;
-                            case 'NumericMax': className = `Restrict${typeOrEnum}Max`; break;
-                            case 'Enumeric': className = `Restrict${typeOrEnum}Enum`; break;
-                            case 'EnumericNegation': className = `Restrict${typeOrEnum}EnumNegation`; break;
-                        }
-
+                        
                         let sign = ''
                         switch(name) {
                             case 'RawNegation': sign = '!'; break;
@@ -138,16 +137,10 @@ const self = {
                         }
 
                         const templateName = name.indexOf('Raw') > -1 ? 'Raw' : 'Quantified'
-                        const restrictType = name.indexOf('Numeric') > -1 ? 
-                            'int' : 
-                            `${typeOrEnum}Enum`
-                        console.log(v, typeOrEnum, restrictType)
                         restrictions.push({
                             fileName: className,
                             name: className,
                             template: `sub/Restriction${templateName}`,
-                            statType: typeOrEnum,
-                            restrictType: restrictType,
                             sign: sign
                         })
                     }))

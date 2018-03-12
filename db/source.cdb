@@ -403,6 +403,33 @@
 							]
 						}
 					]
+				},
+				{
+					"id": "buildCommunizm",
+					"category": [
+						1
+					],
+					"restrictions": [
+						{
+							"values": [
+								1,
+								"diety"
+							]
+						},
+						{
+							"values": [
+								1,
+								"piety"
+							]
+						},
+						{
+							"values": [
+								5,
+								"Race",
+								"HUMAN"
+							]
+						}
+					]
 				}
 			],
 			"separators": [],
