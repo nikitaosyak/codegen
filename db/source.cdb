@@ -40,9 +40,6 @@
 					"children": [
 						{
 							"intent": "killAllHumans"
-						},
-						{
-							"intent": "flirt"
 						}
 					]
 				},
@@ -57,9 +54,6 @@
 					"children": [
 						{
 							"intent": "cook"
-						},
-						{
-							"intent": "flirt"
 						}
 					]
 				},
@@ -69,7 +63,7 @@
 						0
 					],
 					"type": [
-						4,
+						5,
 						0.1,
 						3,
 						0.1
@@ -81,7 +75,7 @@
 						0
 					],
 					"type": [
-						4,
+						5,
 						0,
 						1000,
 						2
@@ -102,7 +96,7 @@
 						0
 					],
 					"type": [
-						3,
+						4,
 						2,
 						8,
 						1
@@ -119,14 +113,41 @@
 						3
 					],
 					"type": [
-						3,
+						4,
 						0,
 						10,
 						1
 					],
+					"restrictions": [
+						{
+							"values": [
+								5,
+								"Race",
+								"ANT"
+							]
+						}
+					]
+				},
+				{
+					"id": "diety",
+					"category": [
+						3
+					],
 					"children": [
 						{
 							"intent": "worship"
+						}
+					],
+					"type": [
+						3
+					],
+					"restrictions": [
+						{
+							"values": [
+								5,
+								"Race",
+								"ANT"
+							]
 						}
 					]
 				},
@@ -136,7 +157,7 @@
 						0
 					],
 					"type": [
-						3,
+						4,
 						3,
 						20,
 						1
@@ -144,18 +165,16 @@
 					"restrictions": [
 						{
 							"values": [
-								2,
-								[
-									1
-								]
+								4,
+								"Race",
+								"ORC"
 							]
 						},
 						{
 							"values": [
-								3,
-								[
-									0
-								]
+								4,
+								"Sex",
+								"MAN"
 							]
 						}
 					]
@@ -166,7 +185,7 @@
 						0
 					],
 					"type": [
-						3,
+						4,
 						2,
 						6,
 						2
@@ -180,15 +199,14 @@
 					"restrictions": [
 						{
 							"values": [
-								3,
-								[
-									1
-								]
+								4,
+								"Sex",
+								"WOMAN"
 							]
 						}
 					],
 					"type": [
-						3,
+						4,
 						0,
 						5,
 						1
@@ -198,7 +216,7 @@
 			"separators": [
 				0,
 				5,
-				7
+				8
 			],
 			"props": {
 				"separatorTitles": [
@@ -256,49 +274,9 @@
 						1
 					],
 					"entropy": 1,
-					"restrictions": [
-						{
-							"values": [
-								2,
-								[
-									1
-								]
-							]
-						}
-					],
 					"children": [
 						{
 							"activity": "attackComrade"
-						}
-					]
-				},
-				{
-					"id": "flirt",
-					"restrictions": [
-						{
-							"values": [
-								2,
-								[
-									0
-								]
-							]
-						},
-						{
-							"values": [
-								3,
-								[
-									1
-								]
-							]
-						}
-					],
-					"entropy": 0,
-					"category": [
-						1
-					],
-					"children": [
-						{
-							"activity": "talk"
 						}
 					]
 				},
@@ -307,10 +285,9 @@
 					"restrictions": [
 						{
 							"values": [
-								3,
-								[
-									1
-								]
+								4,
+								"Sex",
+								"WOMAN"
 							]
 						}
 					],
@@ -335,6 +312,12 @@
 							"values": [
 								0,
 								"piety"
+							]
+						},
+						{
+							"values": [
+								0,
+								"diety"
 							]
 						}
 					],
@@ -397,6 +380,28 @@
 					"id": "useInventory",
 					"category": [
 						0
+					]
+				},
+				{
+					"id": "namaz",
+					"category": [
+						3
+					],
+					"restrictions": [
+						{
+							"values": [
+								2,
+								"piety",
+								8
+							]
+						},
+						{
+							"values": [
+								4,
+								"diety",
+								"ALLAH"
+							]
+						}
 					]
 				}
 			],
@@ -593,6 +598,10 @@
 					"args": []
 				},
 				{
+					"name": "Diety",
+					"args": []
+				},
+				{
 					"name": "IntRange",
 					"args": [
 						{
@@ -644,7 +653,7 @@
 					"args": []
 				},
 				{
-					"name": "MENTAL",
+					"name": "DIVINE",
 					"args": []
 				}
 			]
@@ -695,7 +704,7 @@
 			"name": "Restrictions",
 			"cases": [
 				{
-					"name": "StatisticalRaw",
+					"name": "Raw",
 					"args": [
 						{
 							"name": "name",
@@ -704,39 +713,86 @@
 					]
 				},
 				{
-					"name": "StatisticalNumeric",
+					"name": "RawNegation",
+					"args": [
+						{
+							"name": "name",
+							"typeStr": "1"
+						}
+					]
+				},
+				{
+					"name": "NumericMin",
 					"args": [
 						{
 							"name": "name",
 							"typeStr": "1"
 						},
 						{
-							"name": "min",
+							"name": "v",
 							"typeStr": "3"
+						}
+					]
+				},
+				{
+					"name": "NumericMax",
+					"args": [
+						{
+							"name": "name",
+							"typeStr": "1"
 						},
 						{
-							"name": "max",
+							"name": "v",
 							"typeStr": "3"
 						}
 					]
 				},
 				{
-					"name": "Racial",
+					"name": "Enumeric",
 					"args": [
 						{
+							"name": "name",
+							"typeStr": "1"
+						},
+						{
 							"name": "v",
-							"typeStr": "9:Race"
+							"typeStr": "1"
 						}
 					]
 				},
 				{
-					"name": "Sexual",
+					"name": "EnumericNegation",
 					"args": [
 						{
+							"name": "name",
+							"typeStr": "1"
+						},
+						{
 							"name": "v",
-							"typeStr": "9:Sex"
+							"typeStr": "1"
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "Diety",
+			"cases": [
+				{
+					"name": "NONE",
+					"args": []
+				},
+				{
+					"name": "JESUS",
+					"args": []
+				},
+				{
+					"name": "ALLAH",
+					"args": []
+				},
+				{
+					"name": "SLAANESH",
+					"args": []
 				}
 			]
 		}

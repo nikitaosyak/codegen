@@ -58,18 +58,20 @@ utils.getCustomTypeList(0, 0).forEach(custom => {
 })
 
 utils.getCustomTypeList(1, 100).forEach(custom => {
-    custom.cases.forEach(c => {
+    custom.cases.forEach((c, i) => {
         if (c.name in $.lookup) return
         const ns = 'types.' + custom.name.toLowerCase()
         const typeData = utils.processType(
-            c.name, 'public',
+            c.name, i, 'public',
             c.args, ns
             )
 
-        if (!typeData.template) return
-        utils.writeContent(
-            typeData.template, typeData.fileName,
-            typeData, typeData.using, ns)
+        typeData.forEach(td => {
+            utils.writeContent(
+                td.template, td.fileName,
+                td, td.using, ns)    
+        })
+        
     })
 })
 

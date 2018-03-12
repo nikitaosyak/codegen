@@ -83,42 +83,79 @@ const self = {
         }
     },
 
-    processType: (name, modifier, members, ns = null) => {
+    processType: (name, idx, modifier, members, ns = null) => {
         $.lookup[name] = {
             ns: ns ? `gen.${ns}` : 'gen',
             fields: members
         }
 
+        console.log('--', name)
         switch (name) {
             case 'IntRange':
             case 'FloatRange':
                 $.lookup[name].type = 'range'
                 const numeric = name.replace('Range', '')
-                return {
+                return [{
                     fileName: name,
                     template: 'sub/Range',
                     modifier: 'public',
                     numericCap: numeric,
                     numeric: numeric.toLowerCase()
-                }
-            case 'StatisticalRaw':
-            case 'StatisticalNumeric':
+                }]
+            case 'Raw':
+            case 'RawNegation':
+            case 'NumericMin':
+            case 'NumericMax':
+            case 'Enumeric':
+            case 'EnumericNegation':
                 $.lookup[name].type = 'restriction'
+                const restrictions = []
+                $.db.sheets.forEach(sh => {
+                    const lines = sh.lines.filter(l => 'restrictions' in l)
+                    if (lines.length === 0) return
+                    lines.forEach(l => l.restrictions.forEach(r => {
+                        if (r.values[0] !== idx) return
+                        const v = r.values
+                        // console.log(l.id, r)
+                        const typeOrEnum = v.length > 1 ? self.capitalize(v[1]) : ''
+                        let className = ''
+                        switch(name) {
+                            case 'Raw': className = `Restrict${typeOrEnum}`; break;
+                            case 'RawNegation': className = `Restrict${typeOrEnum}Negation`; break;
+                            case 'NumericMin': className = `Restrict${typeOrEnum}Min`; break;
+                            case 'NumericMax': className = `Restrict${typeOrEnum}Max`; break;
+                            case 'Enumeric': className = `Restrict${typeOrEnum}Enum`; break;
+                            case 'EnumericNegation': className = `Restrict${typeOrEnum}EnumNegation`; break;
+                        }
+
+                        let sign = ''
+                        switch(name) {
+                            case 'RawNegation': sign = '!'; break;
+                            case 'NumericMin': sign = '>'; break;
+                            case 'NumericMax': sign = '<'; break;
+                            case 'Enumeric': sign = '=='; break;
+                            case 'EnumericNegation': sign = '!='; break;
+                        }
+
+                        const templateName = name.indexOf('Raw') > -1 ? 'Raw' : 'Quantified'
+                        const restrictType = name.indexOf('Numeric') > -1 ? 
+                            'int' : 
+                            `${typeOrEnum}Enum`
+                        console.log(v, typeOrEnum, restrictType)
+                        restrictions.push({
+                            fileName: className,
+                            name: className,
+                            template: `sub/Restriction${templateName}`,
+                            statType: typeOrEnum,
+                            restrictType: restrictType,
+                            sign: sign
+                        })
+                    }))
+                })
+                return restrictions
                 break
-            case 'Racial':
-            case 'Sexual':
-                $.lookup[name].type = 'restriction'
-                // console.log(members, ns, self.typeDefFromTypeStr(members[0].typeStr)[0])
-                const stat = self.typeDefFromTypeStr(members[0].typeStr)[0]
-                return {
-                    fileName: `${name}Restriction`,
-                    name: `${name}Restriction`,
-                    template: 'sub/EnumRestriction',
-                    statType: stat,
-                    enumType: `${stat}Enum`
-                }
         }
-        return {}
+        return []
     },
 
     lineValueByColumnType: (column, lineKey, lineValue) => {
@@ -218,7 +255,7 @@ const self = {
                             const v = lineValue.values
                             const complexType = $.db.customTypes.filter(ct => ct.name === 'Restrictions')[0]
                             const complexTypeCase = complexType.cases[v[0]]
-                            console.log(line.id, complexTypeCase, v)
+                            // console.log(line.id, complexTypeCase, v)
                         })
                     }
                 break

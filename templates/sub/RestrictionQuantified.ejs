@@ -1,0 +1,11 @@
+public struct <%-name-%> {
+	public <%-restrictType-%> restrictValue;
+	public <%-name-%>(<%-restrictType-%> value) {
+		this.restrictValue = value;
+	}
+
+	public bool solve(IHero hero) {
+		var v = hero.getStatValue<<%-statType-%>, <%-restrictType-%>>();
+		return v <%-sign-%> this.restrictValue;
+	}
+}
