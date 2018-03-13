@@ -113,7 +113,6 @@ const self = {
                 lookup.type = 'restriction'
                 lookup.variation = []
 
-                console.log(name)
                 let className = ''
                 switch(name) {
                     case 'Raw': 
@@ -146,8 +145,8 @@ const self = {
                         let sign = ''
                         switch(name) {
                             case 'RawNegation': sign = '!'; break;
-                            case 'NumericMin': sign = '>'; break;
-                            case 'NumericMax': sign = '<'; break;
+                            case 'NumericMin': sign = '>='; break;
+                            case 'NumericMax': sign = '<='; break;
                             case 'Enumeric': sign = '=='; break;
                             case 'EnumericNegation': sign = '!='; break;
                         }
@@ -245,6 +244,7 @@ const self = {
         
 
         const fields = []
+        const restrictions = []
         fieldKeys.map(fk => {
             const column = self.columnByLineId(fk, columns)
             const intType = self.typeToInt(column.typeStr)
@@ -265,14 +265,24 @@ const self = {
                             const complexType = $.db.customTypes.filter(ct => ct.name === 'Restrictions')[0]
                             const complexTypeCase = complexType.cases[v[0]]
                             const ctClassName = $.lookup[complexTypeCase.name].className
+                            const statT = self.capitalize(v[1])
 
                             switch(v[0]) {
                                 case 0: //Raw
-                                    console.log(line.id, ctClassName, v)
+                                case 1: //RawNegation
+                                    restrictions.push(`new ${ctClassName}<${statT}>()`)
                                 break
+                                case 2: //StatMin
+                                case 3: //StatMax
+                                    restrictions.push(`new ${ctClassName}<${statT},int>(${v[2]})`)
+                                break
+                                case 4: //Enum
+                                case 5: //EnumNegation
+                                    restrictions.push(`new ${ctClassName}<${statT},${statT}Enum>(${statT}Enum.${v[2]})`)
+                                break
+
                             }
                         })
-			            console.log('----')
                     }
                 break
                 case 9:
@@ -309,7 +319,10 @@ const self = {
             // console.log('->', fk, customType, line[fk])
         })
 
-        Object.assign(template, {fields: fields})
+        Object.assign(template, {
+            fields: fields,
+            restrictions: restrictions.length > 0 ? restrictions : undefined
+        })
     }
 }
 

@@ -7,9 +7,10 @@ public struct <%- name -%> : <%- entityType -%> {
 	public List<I<%-child-%>> children { get { return <%-name-%>.CHILDREN } }
 <% } -%>
 <% if (locals.restrictions) {-%>
-    private RestrictionSolver solver = new RestrictionSolver(new [] { <%-
-        restrictions.join(', ')
-    -%> })
+
+    private RestrictionSolver solver = new RestrictionSolver(new [] {<%-'\n\t\t'-%><%-
+        restrictions.join(',\n\t\t')
+    -%><%-'\n\t'-%>});
     public bool isCompatible(IHero hero) { return solver.solve(hero); }
 <% } else { -%>
 	public bool isCompatible(IHero hero) { return true; }

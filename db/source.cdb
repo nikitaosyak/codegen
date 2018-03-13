@@ -514,6 +514,15 @@
 						{
 							"intent": "killAllHumans"
 						}
+					],
+					"restrictions": [
+						{
+							"values": [
+								3,
+								"Vigor",
+								9
+							]
+						}
 					]
 				}
 			],
