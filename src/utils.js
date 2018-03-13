@@ -11,7 +11,8 @@ const self = {
     // fs utils
     makeSureDirExists: (v) => {
         if (fs.existsSync(v)) return
-        fs.mkdirSync(v)
+        //fs.mkdirSync(v)
+        require('mkdirp').sync(v)
     },
     writeContent: (template, className, content, using = [], namespace = null) => {
 
@@ -89,7 +90,7 @@ const self = {
             fields: members
         }
 
-        console.log('--', name)
+        //console.log('--', name)
         switch (name) {
             case 'IntRange':
             case 'FloatRange':
@@ -108,18 +109,33 @@ const self = {
             case 'NumericMax':
             case 'Enumeric':
             case 'EnumericNegation':
-                $.lookup[name].type = 'restriction'
+                const lookup = $.lookup[name]
+                lookup.type = 'restriction'
+                lookup.variation = []
 
+                console.log(name)
                 let className = ''
                 switch(name) {
-                    case 'Raw': className = `RestrictStat`; break;
-                    case 'RawNegation': className = `RestrictStatNegation`; break;
-                    case 'NumericMin': className = `RestrictStatMin`; break;
-                    case 'NumericMax': className = `RestrictStatMax`; break;
-                    case 'Enumeric': className = `RestrictEnum`; break;
-                    case 'EnumericNegation': className = `RestrictEnumNegation`; break;
+                    case 'Raw': 
+                        className = `RestrictStat`; 
+                        break;
+                    case 'RawNegation': 
+                        className = `RestrictStatNegation`;
+                        break;
+                    case 'NumericMin': 
+                        className = `RestrictStatMin`;
+                        break;
+                    case 'NumericMax': 
+                        className = `RestrictStatMax`;
+                        break;
+                    case 'Enumeric':
+                        className = `RestrictEnum`;
+                        break;
+                    case 'EnumericNegation': 
+                        className = `RestrictEnumNegation`;
+                        break;
                 }
-                $.lookup[name].className = className
+                lookup.className = className
                 const restrictions = []
                 $.db.sheets.forEach(sh => {
                     const lines = sh.lines.filter(l => 'restrictions' in l)
@@ -140,7 +156,7 @@ const self = {
                         restrictions.push({
                             fileName: className,
                             name: className,
-                            template: `sub/Restriction${templateName}`,
+                            template: `restriction/Restriction${templateName}`,
                             sign: sign
                         })
                     }))
@@ -248,8 +264,15 @@ const self = {
                             const v = lineValue.values
                             const complexType = $.db.customTypes.filter(ct => ct.name === 'Restrictions')[0]
                             const complexTypeCase = complexType.cases[v[0]]
-                            // console.log(line.id, complexTypeCase, v)
+                            const ctClassName = $.lookup[complexTypeCase.name].className
+
+                            switch(v[0]) {
+                                case 0: //Raw
+                                    console.log(line.id, ctClassName, v)
+                                break
+                            }
                         })
+			            console.log('----')
                     }
                 break
                 case 9:

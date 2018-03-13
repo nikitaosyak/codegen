@@ -6,9 +6,11 @@ public struct <%- name -%> : <%- entityType -%> {
 	public static readonly List<I<%-child-%>> CHILDREN = new[] { <%-children.join(', ')-%> };
 	public List<I<%-child-%>> children { get { return <%-name-%>.CHILDREN } }
 <% } -%>
-<% if (locals.restrict) {-%>
-
-	
+<% if (locals.restrictions) {-%>
+    private RestrictionSolver solver = new RestrictionSolver(new [] { <%-
+        restrictions.join(', ')
+    -%> })
+    public bool isCompatible(IHero hero) { return solver.solve(hero); }
 <% } else { -%>
 	public bool isCompatible(IHero hero) { return true; }
 <% } -%>

@@ -34,6 +34,16 @@ utils.makeSureDirExists('./build')
     utils.writeContent(
         'IHero',
         'IHero')
+
+    utils.writeContent(
+        'restriction/IRestriction',
+        'IRestriction',
+        {}, [], 'types.restrictions')
+
+    utils.writeContent(
+        'restriction/RestrictionSolver',
+        'RestrictionSolver',
+        {}, ['System.Collections.Generic'], 'types.restrictions')
 }
 
 
