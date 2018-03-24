@@ -4,6 +4,114 @@
 		"selected_items":
 		[
 			[
+				"resti",
+				"restrictions"
+			],
+			[
+				"res",
+				"restrictType"
+			],
+			[
+				"restri",
+				"restrictions"
+			],
+			[
+				"rest",
+				"restrictions"
+			],
+			[
+				"Res",
+				"restrictions"
+			],
+			[
+				"numer",
+				"numeric"
+			],
+			[
+				"nume",
+				"numeric"
+			],
+			[
+				"numeri",
+				"numericType"
+			],
+			[
+				"field",
+				"fieldName"
+			],
+			[
+				"comple",
+				"complexTypeCase"
+			],
+			[
+				"type",
+				"typeof"
+			],
+			[
+				"compleType",
+				"complexTypeCase"
+			],
+			[
+				"com",
+				"complexTypeCase"
+			],
+			[
+				"line",
+				"line"
+			],
+			[
+				"colu",
+				"column"
+			],
+			[
+				"cusom",
+				"customType"
+			],
+			[
+				"nam",
+				"name"
+			],
+			[
+				"lineVa",
+				"lineValue"
+			],
+			[
+				"lineValu",
+				"lineValueByColumnType"
+			],
+			[
+				"temp",
+				"template"
+			],
+			[
+				"le",
+				"length"
+			],
+			[
+				"cus",
+				"customType"
+			],
+			[
+				"cap",
+				"capName"
+			],
+			[
+				"cate",
+				"categoryType"
+			],
+			[
+				"name",
+				"namespace"
+			],
+			[
+				"template",
+				"templateData"
+			],
+			[
+				"re",
+				"readonly"
+			],
+			[
 				"templa",
 				"templateData"
 			],
@@ -17,10 +125,6 @@
 			],
 			[
 				"respawn",
-				"respawns"
-			],
-			[
-				"res",
 				"respawns"
 			],
 			[
@@ -51,6 +155,47 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "src/app.js",
+			"settings":
+			{
+				"buffer_size": 4829,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "build/intent/KillAllHumans.cs",
+			"settings":
+			{
+				"buffer_size": 513,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "build/modifier/GlorySeeker.cs",
+			"settings":
+			{
+				"buffer_size": 604,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "build/types/restrictions/RestrictionSolver.cs",
+			"settings":
+			{
+				"buffer_size": 457,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "build/types/restrictions/RestrictEnum.cs",
+			"settings":
+			{
+				"buffer_size": 360,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -59,7 +204,7 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 215.0,
+		"height": 163.0,
 		"last_filter": "git status",
 		"selected_items":
 		[
@@ -68,16 +213,56 @@
 				"Git: Status"
 			],
 			[
-				"status",
-				"Git: Status"
+				"git push",
+				"Git: Push"
 			],
 			[
 				"git statu",
 				"Git: Status"
 			],
 			[
+				"git stat",
+				"Git: Status"
+			],
+			[
+				"git diff",
+				"Git: Diff Current File"
+			],
+			[
+				"git statsu",
+				"Git: Status"
+			],
+			[
+				"git sattus",
+				"Git: Status"
+			],
+			[
+				"install pa",
+				"Package Control: Install Package"
+			],
+			[
 				"install",
 				"Package Control: Install Package"
+			],
+			[
+				"remove pa",
+				"Package Control: Remove Package"
+			],
+			[
+				"list pack",
+				"Package Control: List Packages"
+			],
+			[
+				"intsall",
+				"Package Control: Install Package"
+			],
+			[
+				"git checkout",
+				"Git: Checkout Current File"
+			],
+			[
+				"status",
+				"Git: Status"
 			],
 			[
 				"view ",
@@ -100,7 +285,7 @@
 				"Package Control: Remove Package"
 			]
 		],
-		"width": 609.0
+		"width": 497.0
 	},
 	"console":
 	{
@@ -120,11 +305,74 @@
 	},
 	"expanded_folders":
 	[
-		"/C/projects/codegen",
-		"/C/projects/codegen/src"
+		"/home/nikita/Projects/codegen",
+		"/home/nikita/Projects/codegen/db",
+		"/home/nikita/Projects/codegen/src",
+		"/home/nikita/Projects/codegen/templates"
 	],
 	"file_history":
 	[
+		"/home/nikita/Projects/codegen/db/source.cdb",
+		"/home/nikita/Projects/codegen/build/statistic/Height.cs",
+		"/home/nikita/Projects/codegen/build/IHero.cs",
+		"/home/nikita/Projects/codegen/build/statistic/IStatistic.cs",
+		"/home/nikita/Projects/codegen/build/intent/IIntent.cs",
+		"/home/nikita/Projects/codegen/build/types/DietyEnum.cs",
+		"/home/nikita/Projects/codegen/src/utils.js",
+		"/home/nikita/Projects/codegen/build/activity/Talk.cs",
+		"/home/nikita/Projects/codegen/templates/sub/RestrictionQuantified.ejs",
+		"/home/nikita/Projects/codegen/build/types/restrictions/RestrictEnumNegation.cs",
+		"/home/nikita/Projects/codegen/build/types/restrictions/RestrictStatMin.cs",
+		"/home/nikita/Projects/codegen/build/types/restrictions/RestrictStat.cs",
+		"/home/nikita/Projects/codegen/templates/sub/RestrictionRaw.ejs",
+		"/home/nikita/Projects/codegen/build/types/restrictions/RestrictDiety.cs",
+		"/home/nikita/Projects/codegen/build/types/restrictions/RestrictNotRaceEnum.cs",
+		"/home/nikita/Projects/codegen/build/types/restrictions/RequiresRaceEnum.cs",
+		"/home/nikita/Projects/codegen/build/types/restrictions/EnumericNegationRestriction.cs",
+		"/home/nikita/Projects/codegen/templates/IHero.ejs",
+		"/home/nikita/Projects/codegen/templates/sub/RestrictionNumeric.ejs",
+		"/home/nikita/Projects/codegen/build/types/restrictions/RacialRestriction.cs",
+		"/home/nikita/Projects/codegen/build/intent/Flirt.cs",
+		"/home/nikita/Projects/codegen/build/statistic/LimbsCount.cs",
+		"/home/nikita/Projects/codegen/build/statistic/TeethLength.cs",
+		"/home/nikita/Projects/codegen/templates/sub/EnumRestriction.ejs",
+		"/home/nikita/Projects/codegen/build/types/restrictions/SexualRestriction.cs",
+		"/home/nikita/Projects/codegen/build/types/restrictions/Racial.cs",
+		"/home/nikita/Projects/codegen/build/types/restrictions/Sexual.cs",
+		"/home/nikita/Projects/codegen/build/types/statistics/FloatRange.cs",
+		"/home/nikita/Projects/codegen/templates/IEntity.ejs",
+		"/home/nikita/Projects/codegen/build/IEntity.cs",
+		"/home/nikita/Projects/codegen/templates/Entity.ejs",
+		"/home/nikita/Projects/codegen/build/statistic/Piety.cs",
+		"/home/nikita/Projects/codegen/build/statistic/BreastSize.cs",
+		"/home/nikita/Projects/codegen/build/statistic/Mouth.cs",
+		"/home/nikita/Projects/codegen/templates/sub/Range.ejs",
+		"/home/nikita/Projects/codegen/codegen.sublime-project",
+		"/home/nikita/Projects/codegen/build/statistic/TeethLenth.cs",
+		"/home/nikita/Projects/codegen/build/statistic/Race.cs",
+		"/home/nikita/Projects/codegen/build/intent/Cook.cs",
+		"/home/nikita/Projects/codegen/build/modifier/GlorySeeker.cs",
+		"/home/nikita/Projects/codegen/build/statistic/Vigor.cs",
+		"/home/nikita/Projects/codegen/build/types/statistics/IntRange.cs",
+		"/home/nikita/Projects/codegen/build/statistic/Sex.cs",
+		"/home/nikita/Projects/codegen/build/intent/Socialize.cs",
+		"/home/nikita/Projects/codegen/build/intent/Worship.cs",
+		"/home/nikita/Projects/codegen/build/types/Race.cs",
+		"/home/nikita/Projects/codegen/build/CategoryEnum.cs",
+		"/home/nikita/Projects/codegen/cs-templates/subtemplates/IntRange.template",
+		"/home/nikita/Projects/codegen/src/data.js",
+		"/home/nikita/Projects/codegen/templates/Namespace.ejs",
+		"/home/nikita/Projects/codegen/templates/Enum.ejs",
+		"/home/nikita/Projects/codegen/build/activity/IActivity.cs",
+		"/home/nikita/Projects/codegen/cs-templates/Entity.template",
+		"/home/nikita/Projects/codegen/cs-templates/IEntity.template",
+		"/home/nikita/Projects/codegen/build/Race.cs",
+		"/home/nikita/Projects/codegen/cs-templates/Namespace.template",
+		"/home/nikita/Projects/codegen/gulpfile.js",
+		"/home/nikita/Projects/codegen/templates/Enum.pug",
+		"/home/nikita/Projects/codegen/.gitignore",
+		"/home/nikita/Projects/codegen/package.json",
+		"/home/nikita/Projects/codegen/build/activity/AttackComrade.cs",
 		"/C/projects/codegen/build/activity/Talk.cs",
 		"/C/projects/codegen/build/activity/Pray.cs",
 		"/C/projects/codegen/app.js",
@@ -163,13 +411,14 @@
 	],
 	"find":
 	{
-		"height": 52.0
+		"height": 25.0
 	},
 	"find_in_files":
 	{
 		"height": 134.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -177,6 +426,15 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"console.log",
+			"intType",
+			"lineValueByColumnType",
+			"lookup.enums",
+			"lookup",
+			"$.lookup.enums",
+			"_type",
+			"statisticsTypes",
+			"_type"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -194,14 +452,159 @@
 	"groups":
 	[
 		{
+			"selected": 4,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4829,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JavaScriptNext.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1445.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "build/intent/KillAllHumans.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 513,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								504,
+								504
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "build/modifier/GlorySeeker.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 604,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								449,
+								466
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "build/types/restrictions/RestrictionSolver.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 457,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								414,
+								414
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "build/types/restrictions/RestrictEnum.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 360,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								357,
+								357
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 30.0
+		"height": 25.0
 	},
 	"input":
 	{
@@ -238,11 +641,15 @@
 	{
 		"height": 111.0
 	},
+	"output.git-push":
+	{
+		"height": 114.0
+	},
 	"pinned_build_system": "",
 	"project": "codegen.sublime-project",
 	"replace":
 	{
-		"height": 55.0
+		"height": 46.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -251,6 +658,122 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"db",
+				"db/source.cdb"
+			],
+			[
+				"diety",
+				"build/types/DietyEnum.cs"
+			],
+			[
+				"fli",
+				"build/intent/Flirt.cs"
+			],
+			[
+				"sexu",
+				"build/types/restrictions/SexualRestriction.cs"
+			],
+			[
+				"teeth",
+				"build/statistic/TeethLength.cs"
+			],
+			[
+				"flo",
+				"build/types/statistics/FloatRange.cs"
+			],
+			[
+				"utils",
+				"src/utils.js"
+			],
+			[
+				"ihe",
+				"build/IHero.cs"
+			],
+			[
+				"tee",
+				"build/statistic/TeethLength.cs"
+			],
+			[
+				"ien",
+				"build/IEntity.cs"
+			],
+			[
+				"ie",
+				"build/IEntity.cs"
+			],
+			[
+				"he",
+				"build/IHero.cs"
+			],
+			[
+				"hero",
+				"build/IHero.cs"
+			],
+			[
+				"iher",
+				"build/IHero.cs"
+			],
+			[
+				"mou",
+				"build/statistic/Mouth.cs"
+			],
+			[
+				"range",
+				"templates/sub/Range.ejs"
+			],
+			[
+				"floatra",
+				"build/types/statistics/FloatRange.cs"
+			],
+			[
+				"hei",
+				"build/statistic/Height.cs"
+			],
+			[
+				"brea",
+				"build/statistic/BreastSize.cs"
+			],
+			[
+				"breas",
+				"build/statistic/BreastSize.cs"
+			],
+			[
+				"li",
+				"build/statistic/LimbsCount.cs"
+			],
+			[
+				"piety",
+				"build/statistic/Piety.cs"
+			],
+			[
+				"cook",
+				"build/intent/Cook.cs"
+			],
+			[
+				"glo",
+				"build/modifier/GlorySeeker.cs"
+			],
+			[
+				"intra",
+				"build/types/statistics/IntRange.cs"
+			],
+			[
+				"ra",
+				"build/statistic/Race.cs"
+			],
+			[
+				"vigo",
+				"build/statistic/Vigor.cs"
+			],
+			[
+				"data",
+				"src/data.js"
+			],
+			[
+				"gulp",
+				"gulpfile.js"
+			],
 			[
 				"debugme",
 				"src\\js\\game\\DebugMenu.js"
@@ -372,7 +895,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 264.0,
+	"side_bar_width": 262.0,
 	"status_bar_visible": false,
 	"template_settings":
 	{

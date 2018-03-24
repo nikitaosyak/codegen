@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const $ = require('./data')
 const utils = require('./utils')
 
@@ -95,7 +97,7 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
     })
 
     entityTables.forEach(entityTable => {
-        utils.makeSureDirExists(`./build/${entityTable.name}`)
+        utils.makeSureDirExists(`${process.env.BUILD_DIR}/${entityTable.name}`)
 
         const baseInterface = 'Entity'
         const entityName = utils.capitalize(entityTable.name)
@@ -120,6 +122,8 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
             childLookup.length > 1 ? baseInterface :
                 utils.capitalize(childLookup[0].link)
 
+        const childImports = /*childLookup.length === 1 ? [childLookup[0].using] : */[]
+
         utils.writeContent(
             'IEntity',
             entityInferface,
@@ -128,7 +132,7 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
                 extends: baseInterface,
                 child: childInterface
             },
-            [], 
+            ['System', 'System.Collections.Generic'],
             namespace
         )
 
@@ -141,7 +145,7 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
             utils.templateAssignImplementation(templateData, entityInferface)
             utils.templateAssignCategory(templateData, line, entityTable.columns)
 
-            const using = line.children ? ['System.Collections.Generic'] : []
+            const using = ['System', 'System.Collections.Generic']
             const childrenList = []
             line.children && line.children.forEach(ch => {
                 Object.keys(ch).forEach(k => {
@@ -149,7 +153,7 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
                     childrenList.push(utils.capitalize(ch[k]))
                 })
             })
-            utils.templateAssignChildList(templateData, childrenList, childInterface)
+            utils.templateAssignChildList(templateData, childrenList/*, childInterface*/)
             utils.templateAssignFields(
                 templateData, 
                 line, entityTable.columns, 

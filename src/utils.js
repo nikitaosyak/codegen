@@ -33,11 +33,11 @@ const self = {
         // console.log(renderData)
 
         const subPath = namespace ? namespace.split('.').join('/') + '/' : ''
-        self.makeSureDirExists(`./build/${subPath}`)
+        self.makeSureDirExists(`${process.env.BUILD_DIR}/${subPath}`)
         ejs.renderFile(`templates/Namespace.ejs`, renderData, undefined, (err, str) => {
             if (err) throw err
             fs.writeFileSync(
-                `./build/${subPath}${className}.cs`, 
+                `${process.env.BUILD_DIR}/${subPath}${className}.cs`, 
                 str.replace(/\t/g, '    ')
             )
         })
@@ -111,7 +111,7 @@ const self = {
             case 'EnumericNegation':
                 const lookup = $.lookup[name]
                 lookup.type = 'restriction'
-                lookup.variation = []
+                lookup.variations = []
 
                 let className = ''
                 switch(name) {
@@ -129,9 +129,15 @@ const self = {
                         break;
                     case 'Enumeric':
                         className = `RestrictEnum`;
+                        lookup.variations = Object.entries($.lookup).filter(e => {
+                            return e[1].type === 'enum'
+                        }).map(f => f[0])
                         break;
                     case 'EnumericNegation': 
                         className = `RestrictEnumNegation`;
+                        lookup.variations = Object.entries($.lookup).filter(e => {
+                            return e[1].type === 'enum'
+                        }).map(f => f[0])
                         break;
                 }
                 lookup.className = className
@@ -141,22 +147,43 @@ const self = {
                     if (lines.length === 0) return
                     lines.forEach(l => l.restrictions.forEach(r => {
                         if (r.values[0] !== idx) return
+                        // console.log(l.restrictions[0])
                         
                         let sign = ''
+                        let variations = ['___']
+                        let variationsClassNames = [className]
                         switch(name) {
                             case 'RawNegation': sign = '!'; break;
-                            case 'NumericMin': sign = '>='; break;
-                            case 'NumericMax': sign = '<='; break;
-                            case 'Enumeric': sign = '=='; break;
-                            case 'EnumericNegation': sign = '!='; break;
+                            case 'NumericMin':
+                                variations = ['int']
+                                sign = '>='; 
+                                break;
+                            case 'NumericMax': 
+                                variations = ['int']
+                                sign = '<='; 
+                                break;
+                            case 'Enumeric':
+                                variations = l.restrictions.map(r => self.capitalize(r.values[1]))
+                                variationsClassNames = variations.map(v => `${className}${v}`)
+                                sign = '=='; 
+                                break;
+                            case 'EnumericNegation': 
+                                variations = l.restrictions.map(r => self.capitalize(r.values[1]))
+                                variationsClassNames = variations.map(v => `${className}${v}`)
+                                sign = '!='; 
+                                break;
                         }
+                        console.log(variations, variationsClassNames)
 
-                        const templateName = name.indexOf('Raw') > -1 ? 'Raw' : 'Quantified'
-                        restrictions.push({
-                            fileName: className,
-                            name: className,
-                            template: `restriction/Restriction${templateName}`,
-                            sign: sign
+                        variations.forEach((TValue, i) => {
+                            const templateName = name.indexOf('Raw') > -1 ? 'Raw' : 'Quantified'
+                            restrictions.push({
+                                fileName: variationsClassNames[i],
+                                name: variationsClassNames[i],
+                                template: `restriction/Restriction${templateName}`,
+                                sign: sign,
+                                tvalue: TValue
+                            })
                         })
                     }))
                 })
@@ -229,10 +256,9 @@ const self = {
         }
     },
 
-    templateAssignChildList: (template, childrenList, childInterface) => {
+    templateAssignChildList: (template, childrenList/*, childInterface*/) => {
         if (childrenList.length === 0) return
         Object.assign(template, {
-            child: childInterface,
             children: childrenList
         })
     },
@@ -260,6 +286,7 @@ const self = {
                 break
                 case 8:
                     if (column.name === 'restrictions') {
+                        using.push('gen.types.restrictions')
                         line[fk].forEach(lineValue => {
                             const v = lineValue.values
                             const complexType = $.db.customTypes.filter(ct => ct.name === 'Restrictions')[0]
@@ -294,6 +321,7 @@ const self = {
                         using.push($.lookup[name].ns)
                         if ($.lookup[name].type === 'enum') {
                             fields.push({
+                                modifier: 'public',
                                 type: `${name}Enum`,
                                 name: fieldKeys.length === 1 ? 'value' : name.toLowerCase()
                             })
@@ -302,13 +330,15 @@ const self = {
                             numericType = numericType === 3 ? 'int' : 'float'
                             // console.log($.lookup[name], line[fk])
                             fields.push({
+                                modifier: 'public',
                                 type: name,
                                 name: $.lookup[name].type,
                                 readonly: true,
                                 modifier: 'public',
-                                value: `new ${name}(${line[fk].splice(1).join(', ')});`
+                                value: `new ${name}(${line[fk].splice(1).join(', ')})`
                             })
                             fields.push({
+                                modifier: 'public',
                                 type: numericType,
                                 name: 'value'
                             })

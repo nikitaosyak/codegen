@@ -9,6 +9,8 @@
   "author": "nikitka",
   "license": "ISC",
   "dependencies": {
+    "del": "^3.0.0",
+    "dotenv": "^5.0.1",
     "ejs": "^2.5.7",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.4.0"

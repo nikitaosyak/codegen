@@ -2,15 +2,15 @@ public struct <%- name -%> : <%- entityType -%> {
 
 	public static readonly Category CATEGORY = <%- category %>;
 	public Category category { get { return <%- name -%>.CATEGORY; } }
-<% if (locals.children) { %>
-	public static readonly List<I<%-child-%>> CHILDREN = new[] { <%-children.join(', ')-%> };
-	public List<I<%-child-%>> children { get { return <%-name-%>.CHILDREN } }
-<% } -%>
+	public static readonly List<Type> CHILDREN = new List<Type>(){ <%-
+		locals.children && children.map(ch=>`typeof(${ch})`).join(', ')
+	-%> };
+	public List<Type> children { get { return <%-name-%>.CHILDREN; } }
 <% if (locals.restrictions) {-%>
 
-    private RestrictionSolver solver = new RestrictionSolver(new [] {<%-'\n\t\t'-%><%-
+    private RestrictionSolver solver/* = new RestrictionSolver(new [] {<%-'\n\t\t'-%><%-
         restrictions.join(',\n\t\t')
-    -%><%-'\n\t'-%>});
+    -%><%-'\n\t'-%>})*/;
     public bool isCompatible(IHero hero) { return solver.solve(hero); }
 <% } else { -%>
 	public bool isCompatible(IHero hero) { return true; }
@@ -18,7 +18,7 @@ public struct <%- name -%> : <%- entityType -%> {
 
 <% locals.fields&&fields.forEach(field => { -%>
 	<%-field.modifier ? `${field.modifier} ` : ''-%><%-field.readonly ? 'readonly ' : ''-%><%-field.type-%> <%-field.name-%><%-
-		typeof(field.value) !== `undefined` ? ` = ${field.value}\n` : ` { public get; private set; }\n#if UNITY_EDITOR\n\tpublic void set${field.name}(${field.type} v) { this.${field.name} = v; }\n#endif\n`
+		typeof(field.value) !== `undefined` ? `/* = ${field.value}*/;\n` : ` { get; private set; }\n#if UNITY_EDITOR\n\tpublic void set${field.name}(${field.type} v) { this.${field.name} = v; }\n#endif\n`
 		-%>
 <% }) -%>
 }
