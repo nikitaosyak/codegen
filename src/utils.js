@@ -111,82 +111,128 @@ const self = {
             case 'EnumericNegation':
                 const lookup = $.lookup[name]
                 lookup.type = 'restriction'
-                lookup.variations = []
+                lookup.variations = ['']
 
                 let className = ''
+                let template = ''
+                let sign = ''
+                let using = ['gen.statistic']
                 switch(name) {
                     case 'Raw': 
-                        className = `RestrictStat`; 
+                        className = `RestrictStat`;
+                        template = 'Raw'
                         break;
                     case 'RawNegation': 
                         className = `RestrictStatNegation`;
+                        template = 'Raw'
+                        sign = '!'
                         break;
                     case 'NumericMin': 
                         className = `RestrictStatMin`;
+                        template = 'Quantified'
+                        lookup.variations = ['float']
+                        sign = '>='
                         break;
                     case 'NumericMax': 
                         className = `RestrictStatMax`;
+                        template = 'Quantified'
+                        lookup.variations = ['float']
+                        sign = '>='
                         break;
                     case 'Enumeric':
                         className = `RestrictEnum`;
                         lookup.variations = Object.entries($.lookup).filter(e => {
                             return e[1].type === 'enum'
-                        }).map(f => f[0])
+                        }).map(f => f[0]).filter(f => f !== 'Category')
+                        template = 'Enum'
+                        sign = '=='
+                        using.push('gen.types')
                         break;
                     case 'EnumericNegation': 
                         className = `RestrictEnumNegation`;
                         lookup.variations = Object.entries($.lookup).filter(e => {
                             return e[1].type === 'enum'
-                        }).map(f => f[0])
+                        }).map(f => f[0]).filter(f => f !== 'Category')
+                        template = 'Enum'
+                        sign = '!='
+                        using.push('gen.types')
                         break;
                 }
+                // console.log(name, className, lookup.variations)
                 lookup.className = className
-                const restrictions = []
-                $.db.sheets.forEach(sh => {
-                    const lines = sh.lines.filter(l => 'restrictions' in l)
-                    if (lines.length === 0) return
-                    lines.forEach(l => l.restrictions.forEach(r => {
-                        if (r.values[0] !== idx) return
-                        // console.log(l.restrictions[0])
-                        
-                        let sign = ''
-                        let variations = ['___']
-                        let variationsClassNames = [className]
-                        switch(name) {
-                            case 'RawNegation': sign = '!'; break;
-                            case 'NumericMin':
-                                variations = ['int']
-                                sign = '>='; 
-                                break;
-                            case 'NumericMax': 
-                                variations = ['int']
-                                sign = '<='; 
-                                break;
-                            case 'Enumeric':
-                                variations = l.restrictions.map(r => self.capitalize(r.values[1]))
-                                variationsClassNames = variations.map(v => `${className}${v}`)
-                                sign = '=='; 
-                                break;
-                            case 'EnumericNegation': 
-                                variations = l.restrictions.map(r => self.capitalize(r.values[1]))
-                                variationsClassNames = variations.map(v => `${className}${v}`)
-                                sign = '!='; 
-                                break;
-                        }
-                        console.log(variations, variationsClassNames)
 
-                        variations.forEach((TValue, i) => {
-                            const templateName = name.indexOf('Raw') > -1 ? 'Raw' : 'Quantified'
-                            restrictions.push({
-                                fileName: variationsClassNames[i],
-                                name: variationsClassNames[i],
-                                template: `restriction/Restriction${templateName}`,
-                                sign: sign,
-                                tvalue: TValue
-                            })
-                        })
-                    }))
+                const restrictions = []
+                lookup.variations.forEach(variation => {
+                    const fName = lookup.variations.length > 1 ? 
+                        `${className}${variation}` : `${className}`
+                    restrictions.push({
+                        fileName: fName,
+                        name: fName,
+                        template: `restriction/Restriction${template}`,
+                        sign: sign,
+                        tvalue: template === 'Enum' ? `${variation}Enum` : variation,
+                        tstat: variation,
+                        using: using
+                    })
                 })
+                // variations.forEach((TValue, i) => {
+                //             restrictions.push({
+                //                 fileName: variationsClassNames[i],
+                //                 name: variationsClassNames[i],
+                //                 template: `restriction/Restriction${templateName}`,
+                //                 sign: sign,
+                //                 tvalue: `${TValue}Enum`,
+                //                 tstat: TValue
+                //             })
+                //         })
+                // $.db.sheets.forEach(sh => {
+                //     const lines = sh.lines.filter(l => 'restrictions' in l)
+                //     if (lines.length === 0) return
+                //     lines.forEach(l => l.restrictions.forEach(rsTable => {
+                //         if (rsTable.values[0] !== idx) return
+                //         // console.log(l.restrictions)
+                        
+                //         l.restrictions.forEach(r => {
+                //             let sign = ''
+                //             let variations = ['___']
+                //             let variationsClassNames = [className]
+                //             let templateName = name
+                //             switch(name) {
+                //                 case 'RawNegation':
+                //                     templateName = 'Raw' 
+                //                     sign = '!'; 
+                //                     break;
+                //                 case 'NumericMin':
+                //                     templateName = 'Quantified'
+                //                     variations = ['int']
+                //                     sign = '>='; 
+                //                     break;
+                //                 case 'NumericMax': 
+                //                     templateName = 'Quantified'
+                //                     variations = ['int']
+                //                     sign = '<='; 
+                //                     break;
+                //                 case 'Enumeric':
+                //                     templateName = 'Enum'
+                //                     variations = l.restrictions.map(r => self.capitalize(r.values[1]))
+                //                     variationsClassNames = variations.map(v => `${className}${v}`)
+                //                     sign = '=='; 
+                //                     break;
+                //                 case 'EnumericNegation': 
+                //                     templateName = 'Enum'
+                //                     variations = l.restrictions.map(r => self.capitalize(r.values[1]))
+                //                     variationsClassNames = variations.map(v => `${className}${v}`)
+                //                     sign = '!='; 
+                //                     break;
+                //             }
+
+                //             // console.log(name, r)
+                //         })
+                        
+
+                        
+                    // }))
+                // })
                 return restrictions
                 break
         }
@@ -305,7 +351,8 @@ const self = {
                                 break
                                 case 4: //Enum
                                 case 5: //EnumNegation
-                                    restrictions.push(`new ${ctClassName}<${statT},${statT}Enum>(${statT}Enum.${v[2]})`)
+                                    // console.log(v, ctClassName)
+                                    restrictions.push(`new ${ctClassName}${statT}(${statT}Enum.${v[2]})`)
                                 break
 
                             }

@@ -1,11 +1,11 @@
-public struct <%-name-%><IStatistic> : IRestriction {
+public struct <%-name-%> : IRestriction {
 	public <%-tvalue-%> restrictValue;
 	public <%-name-%>(<%-tvalue-%> value) {
 		this.restrictValue = value;
 	}
 
 	public bool solve(IHero hero) {
-		var v = hero.getStatValue<IStatistic, <%-tvalue-%>>();
+		var v = hero.getStatValue<<%-tstat-%>, <%-tvalue-%>>();
 		return v <%-sign-%> this.restrictValue;
 	}
 }

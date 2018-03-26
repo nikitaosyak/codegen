@@ -45,7 +45,7 @@ utils.makeSureDirExists('./build')
     utils.writeContent(
         'restriction/RestrictionSolver',
         'RestrictionSolver',
-        {}, ['System.Collections.Generic'], 'types.restrictions')
+        {}, [], 'types.restrictions')
 }
 
 

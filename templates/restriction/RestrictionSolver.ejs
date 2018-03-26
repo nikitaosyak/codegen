@@ -1,13 +1,13 @@
 public struct RestrictionSolver {
     
-    List<IRestriction> restrictions;
+    IRestriction[] restrictions;
     
-    public RestrictionSolver(List<IRestriction> restrictions) {
+    public RestrictionSolver(IRestriction[] restrictions) {
         this.restrictions = restrictions;
     }
 
     public bool solve(IHero hero) {
-        for (int i = 0; i < restrictions.length; i++) {
+        for (int i = 0; i < restrictions.Length; i++) {
             if (!restrictions[i].solve(hero)) return false;
         }
         return true;
