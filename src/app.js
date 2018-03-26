@@ -118,12 +118,12 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
             throw `Impossible children count of ${entityChildren.length} found in entity ${entityName}`
         }
 
-        const childInterface = childLookup.length === 0 ? undefined :
+        const childInterface = childLookup.length === 0 ? baseInterface :
             childLookup.length > 1 ? baseInterface :
                 utils.capitalize(childLookup[0].link)
 
-        const childImports = /*childLookup.length === 1 ? [childLookup[0].using] : */[]
-
+        const childImports = childLookup.length === 1 ? [childLookup[0].using] : []
+        // console.log(entityInferface, childInterface, childImports)
         utils.writeContent(
             'IEntity',
             entityInferface,
@@ -132,9 +132,10 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
                 extends: baseInterface,
                 child: childInterface
             },
-            ['System', 'System.Collections.Generic'],
+            ['System'].concat(childImports),
             namespace
         )
+        // console.log('---------?')
 
         //
         // actually create each entity by line definitions
@@ -145,15 +146,16 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
             utils.templateAssignImplementation(templateData, entityInferface)
             utils.templateAssignCategory(templateData, line, entityTable.columns)
 
-            const using = ['System', 'System.Collections.Generic']
+            let using = [].concat(childImports)
             const childrenList = []
             line.children && line.children.forEach(ch => {
                 Object.keys(ch).forEach(k => {
-                    using.push(childLookup.filter(l => l.link === k).map(l => l.using)[0])
+                    // using.push(childLookup.filter(l => l.link === k).map(l => l.using)[0])
+                    using = using.concat(childLookup.map(cl => cl.using))
                     childrenList.push(utils.capitalize(ch[k]))
                 })
             })
-            utils.templateAssignChildList(templateData, childrenList/*, childInterface*/)
+            utils.templateAssignChildList(templateData, childrenList, childInterface)
             utils.templateAssignFields(
                 templateData, 
                 line, entityTable.columns, 

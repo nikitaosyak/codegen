@@ -35,7 +35,10 @@ const self = {
         const subPath = namespace ? namespace.split('.').join('/') + '/' : ''
         self.makeSureDirExists(`${process.env.BUILD_DIR}/${subPath}`)
         ejs.renderFile(`templates/Namespace.ejs`, renderData, undefined, (err, str) => {
-            if (err) throw err
+            if (err) {
+                console.log(renderData.typeData)
+                throw err
+            }
             fs.writeFileSync(
                 `${process.env.BUILD_DIR}/${subPath}${className}.cs`, 
                 str.replace(/\t/g, '    ')
@@ -302,10 +305,11 @@ const self = {
         }
     },
 
-    templateAssignChildList: (template, childrenList/*, childInterface*/) => {
-        if (childrenList.length === 0) return
+    templateAssignChildList: (template, childrenList, childInterface) => {
+        // if (childrenList.length === 0) return
         Object.assign(template, {
-            children: childrenList
+            children: childrenList,
+            childInterface: childInterface
         })
     },
 

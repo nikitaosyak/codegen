@@ -1,4 +1,4 @@
 public interface I<%- name -%><%- locals.extends ? `: I${locals.extends} {` : ' {' -%>
 <%- locals.category ? '\n\tCategory category { get; }\n' : '' -%>
 <%- locals.restrict ? '\tbool isCompatible(IHero hero);\n' : '' -%>
-<%- locals.child ? `\n\tList<Type> children { get; }\n` : '' -%>}
+<%- locals.child ? `\n\tI${child}[] children { get; }\n` : '' -%>}

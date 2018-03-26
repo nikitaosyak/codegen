@@ -1,13 +1,16 @@
 public struct <%- name -%> : <%- entityType -%> {
 
-	public static readonly Category CATEGORY = <%- category %>;
-	public Category category { get { return <%- name -%>.CATEGORY; } }
-	public static readonly List<Type> CHILDREN = new List<Type>(){ <%-
-		locals.children && children.map(ch=>`typeof(${ch})`).join(', ')
-	-%> };
-	public List<Type> children { get { return <%-name-%>.CHILDREN; } }
-<% if (locals.restrictions) {-%>
+	public static readonly <%-name-%> LINK = default(<%-name-%>);
 
+	private static readonly Category CATEGORY = <%- category %>;
+	public Category category { get { return <%- name -%>.CATEGORY; } }
+
+	private static readonly I<%-childInterface-%>[] CHILDREN = new I<%-childInterface-%>[]{ <%-
+		locals.children && children.map(ch=>`${ch}.LINK`).join(', ')
+	-%> };
+	public I<%-childInterface-%>[] children { get { return <%-name-%>.CHILDREN; } }
+
+<% if (locals.restrictions) {-%>
     private RestrictionSolver solver/* = new RestrictionSolver(new [] {<%-'\n\t\t'-%><%-
         restrictions.join(',\n\t\t')
     -%><%-'\n\t'-%>})*/;
