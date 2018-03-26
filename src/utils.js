@@ -348,15 +348,19 @@ const self = {
                                 case 0: //Raw
                                 case 1: //RawNegation
                                     restrictions.push(`new ${ctClassName}<${statT}>()`)
+                                    using.push('gen.statistic')
                                 break
                                 case 2: //StatMin
                                 case 3: //StatMax
-                                    restrictions.push(`new ${ctClassName}<${statT},int>(${v[2]})`)
+                                    restrictions.push(`new ${ctClassName}<${statT}>(${v[2]})`)
+                                    using.push('gen.statistic')
                                 break
                                 case 4: //Enum
                                 case 5: //EnumNegation
                                     // console.log(v, ctClassName)
                                     restrictions.push(`new ${ctClassName}${statT}(${statT}Enum.${v[2]})`)
+                                    using.push('gen.statistic')
+                                    using.push('gen.types')
                                 break
 
                             }
