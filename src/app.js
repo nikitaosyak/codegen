@@ -132,7 +132,7 @@ utils.getCustomTypeList(1, 100).forEach(custom => {
                 extends: baseInterface,
                 child: childInterface
             },
-            ['System'].concat(childImports),
+            childImports,
             namespace
         )
         // console.log('---------?')

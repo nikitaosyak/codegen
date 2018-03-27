@@ -316,9 +316,6 @@ const self = {
     templateAssignFields: (template, line, columns, fieldKeys, using) => {
         if (fieldKeys.length === 0) return
 
-        // const column = self.columnByLineId('category', columns)
-        
-
         const fields = []
         const restrictions = []
         fieldKeys.map(fk => {
@@ -328,44 +325,42 @@ const self = {
                 case 4:
                     fields.push({
                         type: 'int', 
-                        name: column.name,
-                        readonly: true, 
-                        modifier: 'public',
-                        value: Number.parseInt(line[fk])
+                        name: self.capitalize(column.name),
+                        value: Number.parseInt(line[fk]),
+                        assign: 'constant',
                     })
                 break
                 case 8:
-                    if (column.name === 'restrictions') {
-                        using.push('gen.types.restrictions')
-                        line[fk].forEach(lineValue => {
-                            const v = lineValue.values
-                            const complexType = $.db.customTypes.filter(ct => ct.name === 'Restrictions')[0]
-                            const complexTypeCase = complexType.cases[v[0]]
-                            const ctClassName = $.lookup[complexTypeCase.name].className
-                            const statT = self.capitalize(v[1])
+                    if (column.name !== 'restrictions') break
+                    using.push('gen.types.restrictions')
+                    line[fk].forEach(lineValue => {
+                        const v = lineValue.values
+                        const complexType = $.db.customTypes.filter(ct => ct.name === 'Restrictions')[0]
+                        const complexTypeCase = complexType.cases[v[0]]
+                        const ctClassName = $.lookup[complexTypeCase.name].className
+                        const statT = self.capitalize(v[1])
 
-                            switch(v[0]) {
-                                case 0: //Raw
-                                case 1: //RawNegation
-                                    restrictions.push(`new ${ctClassName}<${statT}>()`)
-                                    using.push('gen.statistic')
-                                break
-                                case 2: //StatMin
-                                case 3: //StatMax
-                                    restrictions.push(`new ${ctClassName}<${statT}>(${v[2]})`)
-                                    using.push('gen.statistic')
-                                break
-                                case 4: //Enum
-                                case 5: //EnumNegation
-                                    // console.log(v, ctClassName)
-                                    restrictions.push(`new ${ctClassName}${statT}(${statT}Enum.${v[2]})`)
-                                    using.push('gen.statistic')
-                                    using.push('gen.types')
-                                break
+                        switch(v[0]) {
+                            case 0: //Raw
+                            case 1: //RawNegation
+                                restrictions.push(`new ${ctClassName}<${statT}>()`)
+                                using.push('gen.statistic')
+                            break
+                            case 2: //StatMin
+                            case 3: //StatMax
+                                restrictions.push(`new ${ctClassName}<${statT}>(${v[2]})`)
+                                using.push('gen.statistic')
+                            break
+                            case 4: //Enum
+                            case 5: //EnumNegation
+                                // console.log(v, ctClassName)
+                                restrictions.push(`new ${ctClassName}${statT}(${statT}Enum.${v[2]})`)
+                                using.push('gen.statistic')
+                                using.push('gen.types')
+                            break
 
-                            }
-                        })
-                    }
+                        }
+                    })
                 break
                 case 9:
                     const customType = self.typeDefFromTypeStr(column.typeStr)[0]
@@ -376,32 +371,26 @@ const self = {
                         using.push($.lookup[name].ns)
                         if ($.lookup[name].type === 'enum') {
                             fields.push({
-                                modifier: 'public',
                                 type: `${name}Enum`,
-                                name: fieldKeys.length === 1 ? 'value' : name.toLowerCase()
+                                name: 'Value',
+                                assign: 'simple'
                             })
                         } else if ($.lookup[name].type === 'range') {
-                            let numericType = self.typeToInt($.lookup[name].fields[0].typeStr)
-                            numericType = numericType === 3 ? 'int' : 'float'
-                            // console.log($.lookup[name], line[fk])
+                            const rangeType = name.indexOf('Int') > -1 ? 'int' : 'float'
                             fields.push({
-                                modifier: 'public',
-                                type: name,
-                                name: $.lookup[name].type,
-                                readonly: true,
-                                modifier: 'public',
-                                value: `new ${name}(${line[fk].splice(1).join(', ')})`
-                            })
-                            fields.push({
-                                modifier: 'public',
-                                type: numericType,
-                                name: 'value'
+                                type: rangeType,
+                                lowerName: 'value',
+                                upperName: 'Value',
+                                assign: 'constrained',
+                                constrain: {
+                                    type: name,
+                                    args: line[fk].splice(1)
+                                        .map(a => `${a}${rangeType === 'float' ? 'f' : ''}`)
+                                }
                             })
                         }
                     }
-                    // console.log(line[fk])
             }
-            // console.log('->', fk, customType, line[fk])
         })
 
         Object.assign(template, {

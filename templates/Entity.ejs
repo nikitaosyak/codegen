@@ -2,13 +2,12 @@ public struct <%- name -%> : <%- entityType -%> {
 
 	public static readonly <%-name-%> LINK = default(<%-name-%>);
 
-	private static readonly Category CATEGORY = <%- category %>;
-	public Category category { get { return CATEGORY; } }
+	public Category Category { get { return <%- category %>; } }
 
 	private static readonly I<%-childInterface-%>[] CHILDREN = { <%-
 		locals.children && children.map(ch=>`${ch}.LINK`).join(', ')
 	-%> };
-	public I<%-childInterface-%>[] children { get { return CHILDREN; } }
+	public I<%-childInterface-%>[] Children { get { return CHILDREN; } }
 
 <% if (locals.restrictions) {-%>
     private static RestrictionSolver solver = new RestrictionSolver(new IRestriction[] {<%-'\n\t\t'-%><%-
@@ -19,9 +18,26 @@ public struct <%- name -%> : <%- entityType -%> {
 	public bool isCompatible(IHero hero) { return true; }
 <% } -%>
 
-<% locals.fields&&fields.forEach(field => { -%>
-	<%-field.modifier ? `${field.modifier} ` : ''-%><%-field.readonly ? 'readonly ' : ''-%><%-field.type-%> <%-field.name-%><%-
-		typeof(field.value) !== `undefined` ? `;\n` : ` { get; private set; }\n#if UNITY_EDITOR\n\tpublic void set${field.name}(${field.type} v) { this.${field.name} = v; }\n#endif\n`
-		-%>
+<% locals.fields&&fields.filter(f => f.assign === 'constant').forEach(f => { -%>
+	public <%-f.type-%> <%-f.name-%> { get { return <%-f.value-%>; } }
+<% }) -%>
+<% locals.fields&&fields.filter(f => f.assign === 'simple').forEach(f => { -%>
+	public <%-f.type-%> <%-f.name-%> { get; private set; }
+	#if UNITY_EDITOR
+	public void Set<%-f.name-%>(<%-f.type-%> v) { <%-f.name-%> = v; }
+	#endif
+<% }) -%>
+<% locals.fields&&fields.filter(f => f.assign === 'constrained').forEach(f => { -%>
+	private static <%-f.constrain.type-%> constrain = new <%-f.constrain.type-%>(<%-
+		f.constrain.args.join(', ')
+		-%>);
+	private <%-f.type-%> <%-f.lowerName-%>;
+	public <%-f.type-%> <%-f.upperName-%> { 
+		get { return <%-f.lowerName-%>; } 
+		private set { <%-f.lowerName-%> = constrain.clamp(value); } 
+	}
+	#if UNITY_EDITOR
+	public void Set<%-f.upperName-%>(<%-f.type-%> v) { <%-f.upperName-%> = v; }
+	#endif
 <% }) -%>
 }
