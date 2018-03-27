@@ -6,9 +6,9 @@ public class RestrictionSolver {
         this.restrictions = restrictions;
     }
 
-    public bool solve(IHero hero) {
+    public bool Solve(IHero hero) {
         for (int i = 0; i < restrictions.Length; i++) {
-            if (!restrictions[i].solve(hero)) return false;
+            if (!restrictions[i].Solve(hero)) return false;
         }
         return true;
     }

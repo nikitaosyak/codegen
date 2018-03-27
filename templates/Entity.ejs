@@ -13,9 +13,9 @@ public struct <%- name -%> : <%- entityType -%> {
     private static RestrictionSolver solver = new RestrictionSolver(new IRestriction[] {<%-'\n\t\t'-%><%-
         restrictions.join(',\n\t\t')
     -%><%-'\n\t'-%>});
-    public bool isCompatible(IHero hero) { return solver.solve(hero); }
+    public bool IsCompatible(IHero hero) { return solver.Solve(hero); }
 <% } else { -%>
-	public bool isCompatible(IHero hero) { return true; }
+	public bool IsCompatible(IHero hero) { return true; }
 <% } -%>
 
 <% locals.fields&&fields.filter(f => f.assign === 'constant').forEach(f => { -%>
@@ -34,7 +34,7 @@ public struct <%- name -%> : <%- entityType -%> {
 	private <%-f.type-%> <%-f.lowerName-%>;
 	public <%-f.type-%> <%-f.upperName-%> { 
 		get { return <%-f.lowerName-%>; } 
-		private set { <%-f.lowerName-%> = constrain.clamp(value); } 
+		private set { <%-f.lowerName-%> = constrain.Clamp(value); } 
 	}
 	#if UNITY_EDITOR
 	public void Set<%-f.upperName-%>(<%-f.type-%> v) { <%-f.upperName-%> = v; }

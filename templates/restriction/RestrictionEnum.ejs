@@ -4,8 +4,8 @@ public class <%-name-%> : IRestriction {
 		this.restrictValue = value;
 	}
 
-	public bool solve(IHero hero) {
-		var v = hero.getStatValue<<%-tstat-%>, <%-tvalue-%>>();
+	public bool Solve(IHero hero) {
+		var v = hero.GetStatValue<<%-tstat-%>, <%-tvalue-%>>();
 		return v <%-sign-%> this.restrictValue;
 	}
 }
